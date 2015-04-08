@@ -18,20 +18,35 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.Network;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.shadow.DirectionalLightShadowFilter;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.Controller;
+import de.lessvoid.nifty.controls.Parameters;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.input.NiftyInputEvent;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import de.lessvoid.nifty.tools.SizeValue;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
-import jmegame.networking.MessagePlayerServerUpdate;
+import jmegame.networking.MessagePlayerServerUpdatePosition;
 import jmegame.networking.MessagePlayerUpdate;
+import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
 import jmegame.networking.SidedPlayerData;
 import jmegame.networking.client.PacketListener;
+import jmegame.server.GameServer;
 
 public class JMEGame extends SimpleApplication
-        implements ActionListener {
+        implements ActionListener, ScreenController, Controller {
 
     private BulletAppState bulletAppState;
     private LevelManager manager;
@@ -48,69 +63,75 @@ public class JMEGame extends SimpleApplication
     private float updateCounter;
 
     private final Map<UUID, SidedPlayerData> players = new HashMap<>();
-
     private final Stack<Runnable> runOnUpdateThread = new Stack<>();
+    private final String adress;
+    private Nifty nifty;
+
+    private int health;
+    private Element healthBarElement;
+
+    public JMEGame(String adress) {
+        this.adress = adress;
+    }
 
     public static void main(String[] args) {
 //        GameServer.main(args);
-        JMEGame app = new JMEGame();
+        String adress;
+        if (args.length == 0) {
+            adress = "localhost";
+        } else if (args[0].equals("--server")) {
+            GameServer.main(args);
+            return;
+        } else {
+            adress = args[0];
+        }
+        JMEGame app = new JMEGame(adress);
         app.start();
     }
 
     @Override
     public void simpleInitApp() {
-        try {
-            inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
-            inputManager.setCursorVisible(true);
-            flyCam.setEnabled(false);
+        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
+        inputManager.setCursorVisible(true);
+        flyCam.setEnabled(false);
 
-            /**
-             * Set up Physics
-             */
-            bulletAppState = new BulletAppState();
-            stateManager.attach(bulletAppState);
+        /**
+         * Set up Physics
+         */
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
             //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
-            // We re-use the flyby camera for rotation, while positioning is handled by physics
-            viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-            flyCam.setMoveSpeed(100);
-            setUpKeys();
-            flyCam.setRotationSpeed(3);
-            setUpLight();
+        // We re-use the flyby camera for rotation, while positioning is handled by physics
+        viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
+        flyCam.setMoveSpeed(100);
+        setUpKeys();
+        flyCam.setRotationSpeed(3);
+        setUpLight();
 
-            manager = new LevelManager(bulletAppState, assetManager);
+        manager = new LevelManager(bulletAppState, assetManager);
 
-            // We set up collision detection for the player by creating
-            // a capsule collision shape and a CharacterControl.
-            // The CharacterControl offers extra settings for
-            // size, stepheight, jumping, falling, and gravity.
-            // We also put the player in its starting position.
-            CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-            player = new CharacterControl(capsuleShape, 0.05f);
-            player.setJumpSpeed(20);
-            player.setFallSpeed(30);
-            player.setGravity(30);
-            player.setPhysicsLocation(new Vector3f(0, 10, 0));
+        // We set up collision detection for the player by creating
+        // a capsule collision shape and a CharacterControl.
+        // The CharacterControl offers extra settings for
+        // size, stepheight, jumping, falling, and gravity.
+        // We also put the player in its starting position.
+        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
+        player = new CharacterControl(capsuleShape, 0.05f);
+        player.setJumpSpeed(20);
+        player.setFallSpeed(30);
+        player.setGravity(30);
+        player.setPhysicsLocation(new Vector3f(0, 10, 0));
 
-            // We attach the scene and the player to the rootnode and the physics space,
-            // to make them appear in the game world.
-            rootNode.attachChild(manager.getSceneModel());
-            bulletAppState.getPhysicsSpace().add(manager.getLandscape());
-            bulletAppState.getPhysicsSpace().add(player);
+        // We attach the scene and the player to the rootnode and the physics space,
+        // to make them appear in the game world.
+        manager.getSceneModel().setShadowMode(ShadowMode.CastAndReceive);
+        rootNode.attachChild(manager.getSceneModel());
+        bulletAppState.getPhysicsSpace().add(manager.getLandscape());
+        bulletAppState.getPhysicsSpace().add(player);
 
-            NetManager.setup();
-            connection = Network.connectToServer("localhost", NetConstants.PORT);
-            connection.start();
-            connection.addMessageListener(new PacketListener(this),
-                    MessagePlayerServerUpdate.class);
-            if (!connection.isConnected()) {
-//                throw new IllegalStateException("connection is not connected!");
-            }
-        } catch (IOException ex) {
-//            Logger.getLogger(JMEGame.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
-
+        initGui();
+        initNetwork();
     }
 
     private void setUpLight() {
@@ -119,10 +140,24 @@ public class JMEGame extends SimpleApplication
         al.setColor(ColorRGBA.White.mult(1.3f));
         rootNode.addLight(al);
 
-        DirectionalLight dl = new DirectionalLight();
-        dl.setColor(ColorRGBA.White);
-        dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-        rootNode.addLight(dl);
+        DirectionalLight sun = new DirectionalLight();
+        sun.setColor(ColorRGBA.White);
+        sun.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+        rootNode.addLight(sun);
+
+        /* Drop shadows */
+        final int SHADOWMAP_SIZE = 1024;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        dlsr.setLight(sun);
+        viewPort.addProcessor(dlsr);
+
+        DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
+        dlsf.setLight(sun);
+        dlsf.setEnabled(true);
+
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.addFilter(dlsf);
+        viewPort.addProcessor(fpp);
     }
 
     /**
@@ -215,7 +250,7 @@ public class JMEGame extends SimpleApplication
             walkDirection.addLocal(camDir.negate());
         }
         player.setWalkDirection(walkDirection);
-        cam.setLocation(player.getPhysicsLocation());
+        cam.setLocation(player.getPhysicsLocation().add(0, 1f, 0));
 
         updateCounter += tpf;
 
@@ -223,7 +258,7 @@ public class JMEGame extends SimpleApplication
             updateCounter -= NetConstants.UPDATE_TIMER;
 
             MessagePlayerUpdate message = new MessagePlayerUpdate(
-                    player.getPhysicsLocation(), cam.getRotation());
+                    player.getPhysicsLocation().subtract(0, 4.5f, 0), cam.getRotation());
             connection.send(message);
         }
 
@@ -269,5 +304,84 @@ public class JMEGame extends SimpleApplication
 
     public BulletAppState getBulletAppState() {
         return bulletAppState;
+    }
+
+    private void initGui() {
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager,
+                inputManager,
+                audioRenderer,
+                guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        nifty.fromXml("Interface/HUD.xml", "hud", this);
+        guiViewPort.addProcessor(niftyDisplay);
+//        new TextBuilder().va
+    }
+
+    @Override
+    public void bind(Nifty nifty, Screen screen) {
+        healthBarElement = nifty.getScreen("hud").findElementByName("hudlayer");
+//        healthBarElement = nifty.getScreen("hud").findElementById("hudlayer")
+//                .findElementById("hudpanel").findElementById("healthbar");
+//        healthBarElement = healthBarElement
+//                .findElementById("outline").findElementById("bar");
+        System.out.println("ok: " + healthBarElement);
+    }
+
+    @Override
+    public void onStartScreen() {
+    }
+
+    @Override
+    public void onEndScreen() {
+    }
+
+    private void initNetwork() {
+        try {
+            NetManager.setup();
+            connection = Network.connectToServer(adress, NetConstants.PORT);
+            connection.start();
+            PacketListener packetListener = new PacketListener(this);
+            connection.addMessageListener(packetListener,
+                    MessagePlayerServerUpdatePosition.class);
+            connection.addMessageListener(packetListener,
+                    MessageServerUpdateStats.class);
+//            if (!connection.isConnected()) {
+//                throw new IllegalStateException("connection is not connected!");
+//            }
+        } catch (IOException ex) {
+//            Logger.getLogger(JMEGame.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+
+        final int MIN_WIDTH = 32;
+        final int MAX_WIDTH = healthBarElement.getParent().getWidth();
+        int pixelWidth = (int) (MIN_WIDTH + (MAX_WIDTH - MIN_WIDTH) * health / 100.0);
+        healthBarElement.setConstraintWidth(new SizeValue(pixelWidth + "px"));
+        healthBarElement.getParent().layoutElements();
+    }
+
+    @Override
+    public void bind(Nifty nifty, Screen screen, Element elmnt, Parameters prmtrs) {
+    }
+
+    @Override
+    public void init(Parameters prmtrs) {
+    }
+
+    @Override
+    public void onFocus(boolean bln) {
+    }
+
+    @Override
+    public boolean inputEvent(NiftyInputEvent nie) {
+        return false;
     }
 }

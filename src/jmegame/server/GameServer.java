@@ -5,7 +5,7 @@
  */
 package jmegame.server;
 
-import jmegame.networking.MessagePlayerServerUpdate;
+import jmegame.networking.MessagePlayerServerUpdatePosition;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.network.HostedConnection;
@@ -21,9 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jmegame.LevelManager;
 import jmegame.networking.MessagePlayerUpdate;
+import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
-import jmegame.networking.PlayerProfile;
+import jmegame.networking.ServerPlayerProfile;
 
 /**
  *
@@ -41,7 +42,7 @@ public class GameServer extends SimpleApplication {
     private Server networkServer;
     private float updateCounter;
 
-    private final Map<HostedConnection, PlayerProfile> profiles = new HashMap<>();
+    private final Map<HostedConnection, ServerPlayerProfile> profiles = new HashMap<>();
 
     @Override
     public void simpleInitApp() {
@@ -98,14 +99,22 @@ public class GameServer extends SimpleApplication {
             int conns = 0;
 
             for (HostedConnection connection : networkServer.getConnections()) {
-                PlayerProfile profile = profiles.get(connection);
+                ServerPlayerProfile profile = profiles.get(connection);
                 if (profile != null) {
                     for (HostedConnection connectionTo
                             : networkServer.getConnections()) {
                         if (connectionTo != connection) {
-                            connectionTo.send(
-                                    new MessagePlayerServerUpdate(profile));
+                            connectionTo.send(new MessagePlayerServerUpdatePosition(profile));
                         }
+                    }
+
+                    if (profile.isUnsentTCP()) {
+                        connection.send(new MessageServerUpdateStats(profile));
+                        profile.setUnsentTCP(false);
+                    }
+
+                    if (Math.random() > 0.1) {
+                        profile.setHealth(profile.getHealth() - 1);
                     }
                 }
                 conns++;

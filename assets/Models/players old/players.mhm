@@ -1,0 +1,25 @@
+# Written by MakeHuman 1.0.2
+version v1.0.2
+tags players
+eyelashes Eyelashes01 d533836f-13ad-4836-8b65-051108253cd2
+eyebrows Eyebrow008 79ea307f-a942-40dd-bf50-bbaa41f02034
+eyes HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6
+clothes Shirt01 c8c87311-c197-4bf8-9e01-fc05a308aee0
+clothes jeans01 faa58a00-05db-4a53-a3a6-72af1cec2053
+clothesHideFaces True
+gendered breast-trans-vert-down-up 0.024000
+gendered BreastFirmness 0.500000
+gendered BreastSize 0.145000
+macro Weight 0.446000
+macro Gender 0.470000
+macro Age 0.476000
+macro Height 0.530000
+macro Asian 0.060000
+macro African 0.060000
+macro Caucasian 0.880000
+macro Muscle 0.452000
+macro BodyProportions 0.229000
+background enabled False
+skinMaterial skins/default.mhmat
+material HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6 eyes/materials/brown.mhmat
+subdivide False

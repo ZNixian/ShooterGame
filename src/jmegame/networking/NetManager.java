@@ -18,7 +18,8 @@ public class NetManager {
 
     public static void setup() {
         Serializer.registerClass(MessagePlayerUpdate.class);
-        Serializer.registerClass(MessagePlayerServerUpdate.class);
+        Serializer.registerClass(MessagePlayerServerUpdatePosition.class);
+        Serializer.registerClass(MessageServerUpdateStats.class);
         
         Serializer.registerClass(PlayerProfile.class);
     }

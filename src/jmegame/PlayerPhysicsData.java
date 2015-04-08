@@ -5,8 +5,11 @@
  */
 package jmegame;
 
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.asset.AssetManager;
+import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.scene.Node;
 
 /**
  *
@@ -17,9 +20,13 @@ public class PlayerPhysicsData {
     private PlayerPhysicsData() {
     }
 
-    public static RigidBodyControl makeRigidBody() {
-        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-        RigidBodyControl body = new RigidBodyControl(capsuleShape, 0);
+    public static RigidBodyControl makeRigidBody(AssetManager loader) {
+//        CapsuleCollisionShape shape = new CapsuleCollisionShape(1.5f, 6f, 1);
+//        BoxCollisionShape shape
+//                = new BoxCollisionShape(new Vector3f(0.5f, 0.5f, 0.5f));
+        CollisionShape shape = CollisionShapeFactory.
+                createMeshShape((Node) LevelManager.getPlayerModel(loader));
+        RigidBodyControl body = new RigidBodyControl(shape, 0);
         return body;
     }
 }
