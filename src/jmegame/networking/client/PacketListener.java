@@ -6,14 +6,22 @@
 package jmegame.networking.client;
 
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import java.util.Map;
 import java.util.UUID;
 import jmegame.JMEGame;
 import jmegame.LevelManager;
+import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
+import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerServerUpdatePosition;
 import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.SidedPlayerData;
@@ -60,8 +68,12 @@ public class PacketListener implements MessageListener<Client> {
 //                    mat1.setColor("Color", ColorRGBA.Blue);
 //                    blue.setMaterial(mat1);
 //                    root.attachChild(blue);
-                    root.attachChild(LevelManager.
-                            getPlayerModel(game.getAssetManager()));
+
+                    Spatial model = LevelManager.
+                            getPlayerModel(game.getAssetManager());
+                    model.getLocalTranslation().addLocal(0,
+                            PLAYER_PHYSICS_OFFSET, 0);
+                    root.attachChild(model);
 
                     game.getRootNode().attachChild(root);
 //                    game.getBulletAppState().getPhysicsSpace().add(body);
@@ -71,7 +83,8 @@ public class PacketListener implements MessageListener<Client> {
 //                    body = player.getCollision();
                 }
 
-                root.setLocalTranslation(update.getProfile().getPosition());
+                root.setLocalTranslation(update.getProfile().
+                        getPosition());
 //                root.setLocalRotation(update.getProfile().getRotation());
 
 //                body.setPhysicsLocation(root.getLocalTranslation());
@@ -84,6 +97,30 @@ public class PacketListener implements MessageListener<Client> {
                     = (MessageServerUpdateStats) message;
 
             game.runOnUpdateThread(() -> game.setHealth(update.getHealth()));
+        }
+
+        if (message instanceof MessagePlayerDisconnect) {
+            // do something with the message
+            final MessagePlayerDisconnect disconnect
+                    = (MessagePlayerDisconnect) message;
+
+            game.runOnUpdateThread(() -> {
+                Map<UUID, SidedPlayerData> players = game.getPlayers();
+                UUID uuid = disconnect.getProfile().getUuid();
+                SidedPlayerData player = players.get(uuid);
+                if (player != null) {
+                    Node root = player.getRender();
+                    RigidBodyControl body = player.getCollision();
+
+                    if (root != null) {
+                        game.getRootNode().detachChild(root);
+                    }
+
+                    if (body != null) {
+                        game.getBulletAppState().getPhysicsSpace().remove(body);
+                    }
+                }
+            });
         }
     }
 }

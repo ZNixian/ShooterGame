@@ -7,6 +7,7 @@ package jmegame.networking;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import java.util.UUID;
 
 /**
@@ -22,6 +23,8 @@ public class ServerPlayerProfile {
     private int health;
 
     private boolean unsentTCP;
+    
+    private Node root;
 
     public ServerPlayerProfile(UUID uuid) {
         this.uuid = uuid;
@@ -74,5 +77,13 @@ public class ServerPlayerProfile {
 
     public void setUnsentTCP(boolean unsentTCP) {
         this.unsentTCP = unsentTCP;
+    }
+
+    public Node getRoot() {
+        return root;
+    }
+
+    public void setRoot(Node root) {
+        this.root = root;
     }
 }

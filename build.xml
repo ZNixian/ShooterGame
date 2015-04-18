@@ -70,4 +70,23 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <!--
+    <target name="-post-jar">
+        <echo>Adding asserts to jar...</echo>
+        <jar destfile="dist/lib/Assets.jar" update="true">
+            <fileset dir="${basedir}/assets">
+                <include name="*"/>
+                <include name="*/*"/>
+                <include name="*/*/*"/>
+            </fileset>
+        </jar>
+    </target>
+    -->
+    
+    <copy todir="dist/lib/assets">
+        <fileset dir="${basedir}/assets"/>
+    </copy>
+    
+    <copy file="${basedir}/town.zip" tofile="dist/town.zip"/>
 </project>

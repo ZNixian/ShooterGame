@@ -20,6 +20,8 @@ public class NetManager {
         Serializer.registerClass(MessagePlayerUpdate.class);
         Serializer.registerClass(MessagePlayerServerUpdatePosition.class);
         Serializer.registerClass(MessageServerUpdateStats.class);
+        Serializer.registerClass(MessageClientShoot.class);
+        Serializer.registerClass(MessagePlayerDisconnect.class);
         
         Serializer.registerClass(PlayerProfile.class);
     }

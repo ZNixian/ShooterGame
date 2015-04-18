@@ -16,6 +16,8 @@ import com.jme3.scene.Node;
  * @author campbell
  */
 public class PlayerPhysicsData {
+    
+    public static final float PLAYER_PHYSICS_OFFSET = -5.5f;
 
     private PlayerPhysicsData() {
     }

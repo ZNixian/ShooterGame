@@ -55,7 +55,8 @@ public class LevelManager {
 //        Material mat_default = new Material(
 //                assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
 //        model.setMaterial(mat_default);
-        MaterialList matList = (MaterialList) assetManager.loadAsset("Models/players/players.material");
+        MaterialList matList = (MaterialList) assetManager.
+                loadAsset("Models/players/players.material");
         ModelKey key = new OgreMeshKey("Models/players/players.mesh.xml", matList);
         Spatial model = assetManager.loadAsset(key);
         model.setLocalScale(0.35859431f); // see assets/Models/players/README_SCALE

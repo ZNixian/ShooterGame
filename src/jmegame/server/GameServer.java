@@ -8,18 +8,24 @@ package jmegame.server;
 import jmegame.networking.MessagePlayerServerUpdatePosition;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
+import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jmegame.LevelManager;
+import jmegame.networking.MessageClientShoot;
+import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
@@ -30,7 +36,8 @@ import jmegame.networking.ServerPlayerProfile;
  *
  * @author campbell
  */
-public class GameServer extends SimpleApplication {
+public class GameServer extends SimpleApplication
+        implements ConnectionListener {
 
     public static void main(String[] args) {
         GameServer app = new GameServer();
@@ -42,7 +49,10 @@ public class GameServer extends SimpleApplication {
     private Server networkServer;
     private float updateCounter;
 
+    private Node players;
+
     private final Map<HostedConnection, ServerPlayerProfile> profiles = new HashMap<>();
+    private final List<ServerPlayerProfile> disconnected = new ArrayList<>();
 
     @Override
     public void simpleInitApp() {
@@ -55,6 +65,9 @@ public class GameServer extends SimpleApplication {
             stateManager.attach(bulletAppState);
 
             manager = new LevelManager(bulletAppState, assetManager);
+
+            players = new Node();
+            rootNode.attachChild(players);
 
 //        // We set up collision detection for the player by creating
 //        // a capsule collision shape and a CharacterControl.
@@ -77,8 +90,10 @@ public class GameServer extends SimpleApplication {
             // make and start a server socket
             networkServer = Network.createServer(NetConstants.PORT);
             networkServer.start();
-            networkServer.addMessageListener(new PacketListener(profiles),
-                    MessagePlayerUpdate.class);
+            PacketListener plistener = new PacketListener(profiles, this);
+            networkServer.addMessageListener(plistener, MessagePlayerUpdate.class);
+            networkServer.addMessageListener(plistener, MessageClientShoot.class);
+            networkServer.addConnectionListener(this);
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -113,8 +128,8 @@ public class GameServer extends SimpleApplication {
                         profile.setUnsentTCP(false);
                     }
 
-                    if (Math.random() > 0.1) {
-                        profile.setHealth(profile.getHealth() - 1);
+                    if (Math.random() > 0.025) {
+                        profile.setHealth(profile.getHealth() + 1);
                     }
                 }
                 conns++;
@@ -127,7 +142,38 @@ public class GameServer extends SimpleApplication {
                     profiles.remove(conn);
                 }
             }
+
+            if (!disconnected.isEmpty()) {
+                for (ServerPlayerProfile prof : disconnected) {
+                    networkServer.broadcast(new MessagePlayerDisconnect(prof));
+                }
+
+                disconnected.clear();
+            }
         }
     }
 
+    @Override
+    public void connectionAdded(Server server, HostedConnection conn) {
+    }
+
+    @Override
+    public void connectionRemoved(Server server, HostedConnection conn) {
+        ServerPlayerProfile removed = profiles.remove(conn);
+        if (removed != null) {
+            Node root = removed.getRoot();
+            if (root != null) {
+                rootNode.detachChild(root);
+            }
+            disconnected.add(removed);
+        }
+    }
+
+    public Node getPlayersNode() {
+        return players;
+    }
+
+    public Map<HostedConnection, ServerPlayerProfile> getProfiles() {
+        return profiles;
+    }
 }

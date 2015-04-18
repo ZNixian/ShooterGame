@@ -10,8 +10,10 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -36,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
+import jmegame.networking.MessageClientShoot;
+import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerServerUpdatePosition;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.MessageServerUpdateStats;
@@ -172,6 +176,8 @@ public class JMEGame extends SimpleApplication
         inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_ESCAPE));
         inputManager.addMapping("Exit", new KeyTrigger(KeyInput.KEY_END));
+        inputManager.addMapping("Shoot",
+                new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(this, "Left");
         inputManager.addListener(this, "Right");
         inputManager.addListener(this, "Up");
@@ -179,6 +185,7 @@ public class JMEGame extends SimpleApplication
         inputManager.addListener(this, "Jump");
         inputManager.addListener(this, "Pause");
         inputManager.addListener(this, "Exit");
+        inputManager.addListener(this, "Shoot");
     }
 
     /**
@@ -217,6 +224,9 @@ public class JMEGame extends SimpleApplication
                 break;
             case "Exit":
                 stop();
+                break;
+            case "Shoot":
+                connection.send(new MessageClientShoot());
                 break;
         }
     }
@@ -258,7 +268,8 @@ public class JMEGame extends SimpleApplication
             updateCounter -= NetConstants.UPDATE_TIMER;
 
             MessagePlayerUpdate message = new MessagePlayerUpdate(
-                    player.getPhysicsLocation().subtract(0, 4.5f, 0), cam.getRotation());
+                    cam.getLocation(), cam.getRotation());
+            // was player.getPhysicsLocation().subtract(0, 4.5f, 0)
             connection.send(message);
         }
 
@@ -285,11 +296,20 @@ public class JMEGame extends SimpleApplication
 
     @Override
     public void stop(boolean bool) {
+//        if (connection.isConnected()) {
+//            connection.close();
+//        }
+//        connection = null;
+        super.stop(bool);
+    }
+
+    @Override
+    public void destroy() {
         if (connection.isConnected()) {
             connection.close();
         }
         connection = null;
-        super.stop(bool);
+        super.destroy();
     }
 
     public Map<UUID, SidedPlayerData> getPlayers() {
@@ -319,7 +339,8 @@ public class JMEGame extends SimpleApplication
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
-        healthBarElement = nifty.getScreen("hud").findElementByName("hudlayer");
+        healthBarElement = nifty.getScreen("hud").findElementById("healthbar")
+                .findElementById("bar");
 //        healthBarElement = nifty.getScreen("hud").findElementById("hudlayer")
 //                .findElementById("hudpanel").findElementById("healthbar");
 //        healthBarElement = healthBarElement
@@ -343,8 +364,12 @@ public class JMEGame extends SimpleApplication
             PacketListener packetListener = new PacketListener(this);
             connection.addMessageListener(packetListener,
                     MessagePlayerServerUpdatePosition.class);
+            
             connection.addMessageListener(packetListener,
                     MessageServerUpdateStats.class);
+            
+            connection.addMessageListener(packetListener,
+                    MessagePlayerDisconnect.class);
 //            if (!connection.isConnected()) {
 //                throw new IllegalStateException("connection is not connected!");
 //            }
