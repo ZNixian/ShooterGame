@@ -31,6 +31,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.texture.Texture;
@@ -49,6 +50,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import static jmegame.JMEGame.make2d;
+import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
+import jmegame.common.PlayerAnimationController;
 import jmegame.networking.MessageClientShoot;
 import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerServerUpdatePosition;
@@ -93,7 +96,9 @@ public class AppStateIngame extends AbstractAppState
     private int health = 100;
     private Element healthBarElement;
 
-    private final Map<UUID, SidedPlayerData> players = new HashMap<>();
+    private Spatial model;
+
+    private final Map<UUID, PlayerAnimationController> players = new HashMap<>();
 
     public AppStateIngame(JMEGame game) {
         this.game = game;
@@ -155,7 +160,14 @@ public class AppStateIngame extends AbstractAppState
         player.setJumpSpeed(20);
         player.setFallSpeed(30);
         player.setGravity(30);
-        player.setPhysicsLocation(new Vector3f(0, 10, 0));
+        player.setPhysicsLocation(new Vector3f(0, 7.5f, 0));
+
+        model = LevelManager.
+                getPlayerModel(assetManager);
+        model.setShadowMode(RenderQueue.ShadowMode.Cast);
+        model.setCullHint(Spatial.CullHint.Always);
+//        model.queueDistance = 1;
+        rootNode.attachChild(model);
 
         // We attach the scene and the player to the rootnode and the physics space,
         // to make them appear in the game world.
@@ -282,7 +294,9 @@ public class AppStateIngame extends AbstractAppState
             walkDirection.addLocal(camDir.negate());
         }
         player.setWalkDirection(walkDirection);
-        cam.setLocation(player.getPhysicsLocation().add(0, 1f, 0));
+        Vector3f pos = player.getPhysicsLocation().add(0, 1f, 0);
+        cam.setLocation(pos);
+//        model.setLocalTranslation(pos.add(0, PLAYER_PHYSICS_OFFSET, -5));
 
         updateCounter += tpf;
 
@@ -293,7 +307,7 @@ public class AppStateIngame extends AbstractAppState
                     cam.getLocation(), cam.getRotation());
             // was player.getPhysicsLocation().subtract(0, 4.5f, 0)
             connection.send(message);
-            
+
 //            connection.send(new MessageClientShoot());
         }
     }
@@ -406,7 +420,7 @@ public class AppStateIngame extends AbstractAppState
         return game;
     }
 
-    public Map<UUID, SidedPlayerData> getPlayers() {
+    public Map<UUID, PlayerAnimationController> getPlayers() {
         return players;
     }
 

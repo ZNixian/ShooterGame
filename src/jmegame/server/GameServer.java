@@ -164,7 +164,7 @@ public class GameServer extends SimpleApplication
     public void connectionRemoved(Server server, HostedConnection conn) {
         ServerPlayerProfile removed = profiles.remove(conn);
         if (removed != null) {
-            Node root = removed.getRoot();
+            Node root = removed.getController().getRoot();
             if (root != null) {
                 rootNode.detachChild(root);
             }

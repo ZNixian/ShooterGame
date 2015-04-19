@@ -5,10 +5,12 @@
  */
 package jmegame.networking;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.util.UUID;
+import jmegame.common.PlayerAnimationController;
 
 /**
  * Stores detailed info on a player
@@ -23,13 +25,15 @@ public class ServerPlayerProfile {
     private int health;
 
     private boolean unsentTCP;
-    
-    private Node root;
 
-    public ServerPlayerProfile(UUID uuid) {
+    private final PlayerAnimationController controller;
+
+    public ServerPlayerProfile(UUID uuid, AssetManager assetManager) {
         this.uuid = uuid;
         health = 100;
         unsentTCP = true;
+
+        controller = new PlayerAnimationController(assetManager);
     }
 
     public PlayerProfile makeSendableVarsion() {
@@ -48,14 +52,6 @@ public class ServerPlayerProfile {
         return uuid;
     }
 
-    public void setPosition(Vector3f position) {
-        this.position = position;
-    }
-
-    public void setRotation(Quaternion rotation) {
-        this.rotation = rotation;
-    }
-
     public int getHealth() {
         return health;
     }
@@ -66,7 +62,7 @@ public class ServerPlayerProfile {
         } else if (health > 100) {
             health = 100;
         }
-        
+
         this.health = health;
         unsentTCP = true;
     }
@@ -79,11 +75,14 @@ public class ServerPlayerProfile {
         this.unsentTCP = unsentTCP;
     }
 
-    public Node getRoot() {
-        return root;
+    public PlayerAnimationController getController() {
+        return controller;
     }
 
-    public void setRoot(Node root) {
-        this.root = root;
+    public void update(MessagePlayerUpdate mpu) {
+        position = mpu.getPosition();
+        rotation = mpu.getRotation();
+        
+        controller.update(position, rotation);
     }
 }

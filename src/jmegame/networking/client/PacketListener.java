@@ -5,23 +5,17 @@
  */
 package jmegame.networking.client;
 
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.math.Quaternion;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import java.util.Map;
 import java.util.UUID;
 import jmegame.AppStateIngame;
-import jmegame.LevelManager;
-import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
+import jmegame.common.PlayerAnimationController;
 import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerServerUpdatePosition;
 import jmegame.networking.MessageServerUpdateStats;
-import jmegame.networking.SidedPlayerData;
 
 /**
  *
@@ -43,51 +37,18 @@ public class PacketListener implements MessageListener<Client> {
                     = (MessagePlayerServerUpdatePosition) message;
 
             game.getGame().runOnUpdateThread(() -> {
-                Map<UUID, SidedPlayerData> players = game.getPlayers();
+                Map<UUID, PlayerAnimationController> players = game.getPlayers();
                 UUID uuid = update.getProfile().getUuid();
-                SidedPlayerData player = players.get(uuid);
-                Node root;
-                RigidBodyControl body;
+                PlayerAnimationController player = players.get(uuid);
                 if (player == null) {
-                    player = new SidedPlayerData();
-                    root = new Node();
-//                    body = PlayerPhysicsData.
-//                            makeRigidBody(game.getAssetManager());
-                    root.setShadowMode(RenderQueue.ShadowMode.Cast);
-                    player.setRender(root);
-//                    player.setCollision(body);
+                    player = new PlayerAnimationController(game.
+                            getGame().getAssetManager());
 
-//                    Box box1 = new Box(1, 1, 1);
-//                    Geometry blue = new Geometry("Box", box1);
-//                    blue.setLocalTranslation(new Vector3f(1, -1, 1));
-//                    Material mat1 = new Material(game.getAssetManager(),
-//                            "Common/MatDefs/Misc/Unshaded.j3md");
-//                    mat1.setColor("Color", ColorRGBA.Blue);
-//                    blue.setMaterial(mat1);
-//                    root.attachChild(blue);
-                    Spatial model = LevelManager.
-                            getPlayerModel(game.getGame().getAssetManager());
-                    model.getLocalTranslation().addLocal(0,
-                            PLAYER_PHYSICS_OFFSET, 0);
-                    root.attachChild(model);
-
-                    game.getRootNode().attachChild(root);
+                    game.getRootNode().attachChild(player.getRoot());
 //                    game.getBulletAppState().getPhysicsSpace().add(body);
                     players.put(uuid, player);
-                } else {
-                    root = player.getRender();
-//                    body = player.getCollision();
                 }
-
-                root.setLocalTranslation(update.getProfile().
-                        getPosition());
-                
-                Quaternion q = update.getProfile().
-                        getRotation().clone();
-                q.set(0, q.getY(), 0, q.getW());
-                root.setLocalRotation(q);
-
-//                body.setPhysicsLocation(root.getLocalTranslation());
+                player.update(update.getProfile());
             });
         }
 
@@ -105,19 +66,14 @@ public class PacketListener implements MessageListener<Client> {
                     = (MessagePlayerDisconnect) message;
 
             game.getGame().runOnUpdateThread(() -> {
-                Map<UUID, SidedPlayerData> players = game.getPlayers();
+                Map<UUID, PlayerAnimationController> players = game.getPlayers();
                 UUID uuid = disconnect.getProfile().getUuid();
-                SidedPlayerData player = players.get(uuid);
+                PlayerAnimationController player = players.get(uuid);
                 if (player != null) {
-                    Node root = player.getRender();
-                    RigidBodyControl body = player.getCollision();
+                    Node root = player.getRoot();
 
                     if (root != null) {
                         game.getRootNode().detachChild(root);
-                    }
-
-                    if (body != null) {
-                        game.getBulletAppState().getPhysicsSpace().remove(body);
                     }
                 }
             });

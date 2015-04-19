@@ -52,32 +52,17 @@ public class PacketListener implements MessageListener<HostedConnection> {
 //                    + "' with rotation '" + mpu.getRotation()
 //                    + "' from client #" + source.getId());
             ServerPlayerProfile prof = profiles.get(source);
-            Node root;
             if (prof == null) {
-                prof = new ServerPlayerProfile(UUID.randomUUID());
+                prof = new ServerPlayerProfile(UUID.randomUUID(),
+                        server.getAssetManager());
 
-                root = new Node();
-                root.attachChild(LevelManager.
-                        getPlayerModel(server.getAssetManager()));
-
-                prof.setRoot(root);
-
-                server.getPlayersNode().attachChild(root);
+                server.getPlayersNode().attachChild(
+                        prof.getController().getRoot());
 
                 prof.setHealth(100);
-            } else {
-                root = prof.getRoot();
             }
 
-            prof.setPosition(mpu.getPosition());
-            prof.setRotation(mpu.getRotation());
-
-            root.setLocalTranslation(mpu.getPosition().
-                    add(0, PLAYER_PHYSICS_OFFSET, 0));
-
-            Quaternion q = mpu.getRotation().clone();
-            q.set(0, q.getY(), 0, q.getW());
-            root.setLocalRotation(q);
+            prof.update(mpu);
 
             profiles.put(source, prof);
         } else if (message instanceof MessageClientShoot) {
@@ -98,17 +83,7 @@ public class PacketListener implements MessageListener<HostedConnection> {
                     .getRotationColumn(2));
             // 3. Collect intersections between Ray and Shootables in results list.
             server.getPlayersNode().collideWith(ray, results);
-            // 4. Print the results
-//            System.out.println("----- Collisions? " + results.size() + "-----");
-//            for (int i = 0; i < results.size(); i++) {
-//                // For each hit, we know distance, impact point, name of geometry.
-//                float dist = results.getCollision(i).getDistance();
-//                Vector3f pt = results.getCollision(i).getContactPoint();
-//                String hit = results.getCollision(i).getGeometry().getName();
-//                System.out.println("* Collision #" + i);
-//                System.out.println("  You shot " + hit + " at " + pt + ", " + dist + " wu away.");
-//            }
-            // 5. Use the results (we mark the hit object)
+
             if (results.size() > 0) {
                 ServerPlayerProfile hitplayer = null;
                 int i = 0;
@@ -128,8 +103,8 @@ public class PacketListener implements MessageListener<HostedConnection> {
 //                    System.out.println("No player hit!?");
                     return;
                 }
-                System.out.println("prof: " + prof.getUuid()
-                        + ", hitPlayer: " + hitplayer.getUuid());
+//                System.out.println("prof: " + prof.getUuid()
+//                        + ", hitPlayer: " + hitplayer.getUuid());
                 hitplayer.setHealth(hitplayer.getHealth() - 10);
 //                System.out.println("hit player " + hitplayer);
             }
@@ -142,7 +117,7 @@ public class PacketListener implements MessageListener<HostedConnection> {
         }
         for (HostedConnection conn : server.getProfiles().keySet()) {
             ServerPlayerProfile possiblePlayer = server.getProfiles().get(conn);
-            if (possiblePlayer.getRoot() == hit) {
+            if (possiblePlayer.getController().getRoot() == hit) {
                 return possiblePlayer;
             }
         }
