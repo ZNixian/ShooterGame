@@ -128,8 +128,11 @@ public class GameServer extends SimpleApplication
                         profile.setUnsentTCP(false);
                     }
 
-                    if (Math.random() > 0.025) {
-                        profile.setHealth(profile.getHealth() + 1);
+//                    if (Math.random() > 0.025) {
+//                        profile.setHealth(profile.getHealth() + 1);
+//                    }
+                    if (profile.getHealth() == 0) {
+                        connection.close("died");
                     }
                 }
                 conns++;

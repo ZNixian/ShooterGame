@@ -63,6 +63,8 @@ public class PacketListener implements MessageListener<HostedConnection> {
                 prof.setRoot(root);
 
                 server.getPlayersNode().attachChild(root);
+
+                prof.setHealth(100);
             } else {
                 root = prof.getRoot();
             }
@@ -76,7 +78,7 @@ public class PacketListener implements MessageListener<HostedConnection> {
             Quaternion q = mpu.getRotation().clone();
             q.set(0, q.getY(), 0, q.getW());
             root.setLocalRotation(q);
-            
+
             profiles.put(source, prof);
         } else if (message instanceof MessageClientShoot) {
             // do something with the message
@@ -111,18 +113,24 @@ public class PacketListener implements MessageListener<HostedConnection> {
                 ServerPlayerProfile hitplayer = null;
                 int i = 0;
                 do {
+                    if (i >= results.size()) {
+                        hitplayer = null;
+                        continue; // could be break; , but meh.
+                    }
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getCollision(i);
                     Spatial hit = closest.getGeometry();
 
                     hitplayer = findProfileForPlayer(hit);
                     i++;
-                } while (hitplayer == prof && i < results.size());
+                } while (hitplayer == prof);
                 if (hitplayer == null) {
 //                    System.out.println("No player hit!?");
                     return;
                 }
-                hitplayer.setHealth(10);
+                System.out.println("prof: " + prof.getUuid()
+                        + ", hitPlayer: " + hitplayer.getUuid());
+                hitplayer.setHealth(hitplayer.getHealth() - 10);
 //                System.out.println("hit player " + hitplayer);
             }
         }

@@ -90,7 +90,7 @@ public class AppStateIngame extends AbstractAppState
     private Client connection;
     private float updateCounter;
 
-    private int health;
+    private int health = 100;
     private Element healthBarElement;
 
     private final Map<UUID, SidedPlayerData> players = new HashMap<>();
