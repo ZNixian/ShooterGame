@@ -3,7 +3,7 @@
     <useStyles filename="nifty-default-styles.xml" />
     <useControls filename="nifty-default-controls.xml" />
  
-    <controlDefinition name = "healthbar" controller = "jmegame.JMEGame">
+    <controlDefinition name = "healthbar" controller = "jmegame.AppStateIngame">
         <image id="outline" filename="Interface/border.png" childLayout="absolute" 
                imageMode="resize:15,2,15,15,15,2,15,2,15,2,15,15">
             <image id="bar" x="0" y="0" filename="Interface/inner.png" width="32px" height="100%"
@@ -11,7 +11,7 @@
         </image>
     </controlDefinition>
  
-    <screen id="hud" controller = "jmegame.JMEGame">
+    <screen id="hud" controller = "jmegame.AppStateIngame">
         <layer id="hudlayer" childLayout="horizontal">
             <panel id = "hudpanel" childLayout="vertical" align="left"
                    valign="bottom" height="32px" width="20%">

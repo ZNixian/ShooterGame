@@ -64,7 +64,7 @@ public class GameServer extends SimpleApplication
             bulletAppState = new BulletAppState();
             stateManager.attach(bulletAppState);
 
-            manager = new LevelManager(bulletAppState, assetManager);
+            manager = new LevelManager(assetManager);
 
             players = new Node();
             rootNode.attachChild(players);

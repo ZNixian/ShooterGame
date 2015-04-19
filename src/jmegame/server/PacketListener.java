@@ -115,7 +115,7 @@ public class PacketListener implements MessageListener<HostedConnection> {
                     i++;
                 }
                 if (hitplayer == null) {
-                    System.out.println("No player hit!?");
+//                    System.out.println("No player hit!?");
                     return;
                 }
                 hitplayer.setHealth(10);

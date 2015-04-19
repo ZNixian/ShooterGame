@@ -8,7 +8,6 @@ package jmegame;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.asset.plugins.ZipLocator;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
@@ -26,11 +25,12 @@ public class LevelManager {
     private final Spatial sceneModel;
     private final RigidBodyControl landscape;
 
-    public LevelManager(BulletAppState bulletAppState, AssetManager assetManager) {
+    public LevelManager(AssetManager assetManager) {
 
         // We load the scene from the zip file and adjust its size.
         assetManager.registerLocator("town.zip", ZipLocator.class);
 //        assetManager.registerLocator("players.zip", ZipLocator.class);
+        assetManager.registerLocator("lib/assets.jar", ZipLocator.class);
         sceneModel = assetManager.loadModel("main.scene");
         sceneModel.setLocalScale(2f);
 

@@ -6,19 +6,14 @@
 package jmegame.networking.client;
 
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import java.util.Map;
 import java.util.UUID;
-import jmegame.JMEGame;
+import jmegame.AppStateIngame;
 import jmegame.LevelManager;
 import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
 import jmegame.networking.MessagePlayerDisconnect;
@@ -32,9 +27,9 @@ import jmegame.networking.SidedPlayerData;
  */
 public class PacketListener implements MessageListener<Client> {
 
-    private final JMEGame game;
+    private final AppStateIngame game;
 
-    public PacketListener(JMEGame game) {
+    public PacketListener(AppStateIngame game) {
         this.game = game;
     }
 
@@ -45,7 +40,7 @@ public class PacketListener implements MessageListener<Client> {
             MessagePlayerServerUpdatePosition update
                     = (MessagePlayerServerUpdatePosition) message;
 
-            game.runOnUpdateThread(() -> {
+            game.getGame().runOnUpdateThread(() -> {
                 Map<UUID, SidedPlayerData> players = game.getPlayers();
                 UUID uuid = update.getProfile().getUuid();
                 SidedPlayerData player = players.get(uuid);
@@ -68,14 +63,13 @@ public class PacketListener implements MessageListener<Client> {
 //                    mat1.setColor("Color", ColorRGBA.Blue);
 //                    blue.setMaterial(mat1);
 //                    root.attachChild(blue);
-
                     Spatial model = LevelManager.
-                            getPlayerModel(game.getAssetManager());
+                            getPlayerModel(game.getGame().getAssetManager());
                     model.getLocalTranslation().addLocal(0,
                             PLAYER_PHYSICS_OFFSET, 0);
                     root.attachChild(model);
 
-                    game.getRootNode().attachChild(root);
+                    game.getGame().getRootNode().attachChild(root);
 //                    game.getBulletAppState().getPhysicsSpace().add(body);
                     players.put(uuid, player);
                 } else {
@@ -96,7 +90,7 @@ public class PacketListener implements MessageListener<Client> {
             final MessageServerUpdateStats update
                     = (MessageServerUpdateStats) message;
 
-            game.runOnUpdateThread(() -> game.setHealth(update.getHealth()));
+            game.getGame().runOnUpdateThread(() -> game.setHealth(update.getHealth()));
         }
 
         if (message instanceof MessagePlayerDisconnect) {
@@ -104,7 +98,7 @@ public class PacketListener implements MessageListener<Client> {
             final MessagePlayerDisconnect disconnect
                     = (MessagePlayerDisconnect) message;
 
-            game.runOnUpdateThread(() -> {
+            game.getGame().runOnUpdateThread(() -> {
                 Map<UUID, SidedPlayerData> players = game.getPlayers();
                 UUID uuid = disconnect.getProfile().getUuid();
                 SidedPlayerData player = players.get(uuid);
@@ -113,7 +107,7 @@ public class PacketListener implements MessageListener<Client> {
                     RigidBodyControl body = player.getCollision();
 
                     if (root != null) {
-                        game.getRootNode().detachChild(root);
+                        game.getGame().getRootNode().detachChild(root);
                     }
 
                     if (body != null) {
