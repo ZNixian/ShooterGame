@@ -119,7 +119,7 @@ public class AppStateIngame extends AbstractAppState
         if (!isEnabled() && enabled) {
             game.getRootNode().attachChild(rootNode);
         }
-        
+
         super.setEnabled(enabled);
     }
 
@@ -293,6 +293,8 @@ public class AppStateIngame extends AbstractAppState
                     cam.getLocation(), cam.getRotation());
             // was player.getPhysicsLocation().subtract(0, 4.5f, 0)
             connection.send(message);
+            
+//            connection.send(new MessageClientShoot());
         }
     }
 
@@ -406,6 +408,10 @@ public class AppStateIngame extends AbstractAppState
 
     public Map<UUID, SidedPlayerData> getPlayers() {
         return players;
+    }
+
+    public Node getRootNode() {
+        return rootNode;
     }
 
 }

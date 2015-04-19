@@ -7,8 +7,8 @@ package jmegame.server;
 
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
-import com.jme3.math.Vector3f;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -73,6 +73,10 @@ public class PacketListener implements MessageListener<HostedConnection> {
             root.setLocalTranslation(mpu.getPosition().
                     add(0, PLAYER_PHYSICS_OFFSET, 0));
 
+            Quaternion q = mpu.getRotation().clone();
+            q.set(0, q.getY(), 0, q.getW());
+            root.setLocalRotation(q);
+            
             profiles.put(source, prof);
         } else if (message instanceof MessageClientShoot) {
             // do something with the message
@@ -106,19 +110,20 @@ public class PacketListener implements MessageListener<HostedConnection> {
             if (results.size() > 0) {
                 ServerPlayerProfile hitplayer = null;
                 int i = 0;
-                while (hitplayer == prof && i < results.size()) {
+                do {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getCollision(i);
                     Spatial hit = closest.getGeometry();
 
                     hitplayer = findProfileForPlayer(hit);
                     i++;
-                }
+                } while (hitplayer == prof && i < results.size());
                 if (hitplayer == null) {
 //                    System.out.println("No player hit!?");
                     return;
                 }
                 hitplayer.setHealth(10);
+//                System.out.println("hit player " + hitplayer);
             }
         }
     }

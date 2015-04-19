@@ -6,9 +6,11 @@
 package jmegame.networking.client;
 
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.Quaternion;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Map;
@@ -51,7 +53,7 @@ public class PacketListener implements MessageListener<Client> {
                     root = new Node();
 //                    body = PlayerPhysicsData.
 //                            makeRigidBody(game.getAssetManager());
-//                    root.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+                    root.setShadowMode(RenderQueue.ShadowMode.Cast);
                     player.setRender(root);
 //                    player.setCollision(body);
 
@@ -69,7 +71,7 @@ public class PacketListener implements MessageListener<Client> {
                             PLAYER_PHYSICS_OFFSET, 0);
                     root.attachChild(model);
 
-                    game.getGame().getRootNode().attachChild(root);
+                    game.getRootNode().attachChild(root);
 //                    game.getBulletAppState().getPhysicsSpace().add(body);
                     players.put(uuid, player);
                 } else {
@@ -79,7 +81,11 @@ public class PacketListener implements MessageListener<Client> {
 
                 root.setLocalTranslation(update.getProfile().
                         getPosition());
-//                root.setLocalRotation(update.getProfile().getRotation());
+                
+                Quaternion q = update.getProfile().
+                        getRotation().clone();
+                q.set(0, q.getY(), 0, q.getW());
+                root.setLocalRotation(q);
 
 //                body.setPhysicsLocation(root.getLocalTranslation());
             });
@@ -107,7 +113,7 @@ public class PacketListener implements MessageListener<Client> {
                     RigidBodyControl body = player.getCollision();
 
                     if (root != null) {
-                        game.getGame().getRootNode().detachChild(root);
+                        game.getRootNode().detachChild(root);
                     }
 
                     if (body != null) {
