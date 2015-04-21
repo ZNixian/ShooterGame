@@ -96,7 +96,7 @@ public class AppStateIngame extends AbstractAppState
     private int health = 100;
     private Element healthBarElement;
 
-    private Spatial model;
+    private PlayerAnimationController model;
 
     private final Map<UUID, PlayerAnimationController> players = new HashMap<>();
 
@@ -162,12 +162,9 @@ public class AppStateIngame extends AbstractAppState
         player.setGravity(30);
         player.setPhysicsLocation(new Vector3f(0, 7.5f, 0));
 
-        model = LevelManager.
-                getPlayerModel(assetManager);
-        model.setShadowMode(RenderQueue.ShadowMode.Cast);
-        model.setCullHint(Spatial.CullHint.Always);
-//        model.queueDistance = 1;
-        rootNode.attachChild(model);
+        model = new PlayerAnimationController(assetManager);
+        rootNode.attachChild(model.getRoot());
+//        model.getRoot().setCullHint(Spatial.CullHint.Always);
 
         // We attach the scene and the player to the rootnode and the physics space,
         // to make them appear in the game world.
@@ -296,7 +293,7 @@ public class AppStateIngame extends AbstractAppState
         player.setWalkDirection(walkDirection);
         Vector3f pos = player.getPhysicsLocation().add(0, 1f, 0);
         cam.setLocation(pos);
-//        model.setLocalTranslation(pos.add(0, PLAYER_PHYSICS_OFFSET, -5));
+        model.update(pos, cam.getRotation());
 
         updateCounter += tpf;
 

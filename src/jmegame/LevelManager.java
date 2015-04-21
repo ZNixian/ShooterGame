@@ -30,7 +30,7 @@ public class LevelManager {
         // We load the scene from the zip file and adjust its size.
         assetManager.registerLocator("town.zip", ZipLocator.class);
 //        assetManager.registerLocator("players.zip", ZipLocator.class);
-        assetManager.registerLocator("lib/assets.jar", ZipLocator.class);
+//        assetManager.registerLocator("lib/assets.jar", ZipLocator.class);
         sceneModel = assetManager.loadModel("main.scene");
         sceneModel.setLocalScale(2f);
 

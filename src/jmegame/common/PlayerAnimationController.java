@@ -5,17 +5,20 @@
  */
 package jmegame.common;
 
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import jmegame.AppStateIngame;
 import jmegame.LevelManager;
 import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.PlayerProfile;
+import jmegame.weapons.Glock18;
+import jmegame.weapons.PP2000;
 
 /**
  *
@@ -24,6 +27,8 @@ import jmegame.networking.PlayerProfile;
 public class PlayerAnimationController {
 
     private final Node root;
+    private final AnimControl playerControl;
+    private final AnimChannel boneControl;
 
     public PlayerAnimationController(AssetManager assetManager) {
         root = new Node();
@@ -44,6 +49,12 @@ public class PlayerAnimationController {
         model.getLocalTranslation().addLocal(0,
                 PLAYER_PHYSICS_OFFSET, 0);
         root.attachChild(model);
+        Spatial gun = PP2000.INSTANCE.load(assetManager);
+        root.attachChild(gun);
+
+        playerControl = model.getControl(AnimControl.class);
+
+        boneControl = playerControl.createChannel();
     }
 
     public Node getRoot() {
@@ -64,7 +75,5 @@ public class PlayerAnimationController {
         Quaternion q = rot.clone();
         q.set(0, q.getY(), 0, q.getW());
         root.setLocalRotation(q);
-
-//                body.setPhysicsLocation(root.getLocalTranslation());
     }
 }

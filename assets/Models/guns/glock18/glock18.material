@@ -1,0 +1,296 @@
+
+material _missing_material_
+{
+    receive_shadows off
+    technique
+    {
+        pass
+        {
+            ambient 0.1 0.1 0.1 1.0
+            diffuse 0.8 0.0 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.3 0.3 0.3 1.0
+        }
+    }
+}
+
+// genericTex_4 genrated by blender2ogre 0.6.0
+
+material genericTex_4 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_4
+        {
+            ambient 0.37254899740219116 0.37254899740219116 0.37254899740219116 1.0
+            diffuse 0.29803920236288306 0.29803920236288306 0.29803920236288306 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// genericTex_10 genrated by blender2ogre 0.6.0
+
+material genericTex_10 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_10
+        {
+            ambient 0.6941180229187012 0.1411760002374649 0.0 1.0
+            diffuse 0.5552944266094926 0.11294080187292099 0.0 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// genericTex_2 genrated by blender2ogre 0.6.0
+
+material genericTex_2 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_2
+        {
+            ambient 0.17647099494934082 0.17647099494934082 0.17647099494934082 1.0
+            diffuse 0.14117679806317085 0.14117679806317085 0.14117679806317085 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// FrontColor genrated by blender2ogre 0.6.0
+
+material FrontColor 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass FrontColor
+        {
+            ambient 1.0 1.0 1.0 1.0
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// genericTex_3 genrated by blender2ogre 0.6.0
+
+material genericTex_3 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_3
+        {
+            ambient 0.24705900251865387 0.24705900251865387 0.24705900251865387 1.0
+            diffuse 0.1976472049600959 0.1976472049600959 0.1976472049600959 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// genericTex_11 genrated by blender2ogre 0.6.0
+
+material genericTex_11 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_11
+        {
+            ambient 0.4313730001449585 0.08627499639987946 0.0 1.0
+            diffuse 0.3450984052583337 0.06901999814838167 0.0 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// genericTex_8 genrated by blender2ogre 0.6.0
+
+material genericTex_8 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_8
+        {
+            ambient 0.5294119715690613 0.8941180109977722 0.1294119954109192 1.0
+            diffuse 0.4235295835663315 0.7152944194569351 0.10352959787144655 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// genericTex_12 genrated by blender2ogre 0.6.0
+
+material genericTex_12 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass genericTex_12
+        {
+            ambient 0.6588240265846252 0.1333329975605011 0.00392200006172061 1.0
+            diffuse 0.5270592291214946 0.10666639963785407 0.003137600096130372 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

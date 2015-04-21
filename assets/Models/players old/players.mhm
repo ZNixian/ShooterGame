@@ -22,4 +22,5 @@ macro BodyProportions 0.229000
 background enabled False
 skinMaterial skins/default.mhmat
 material HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6 eyes/materials/brown.mhmat
+skeleton game.json
 subdivide False
