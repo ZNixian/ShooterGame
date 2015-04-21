@@ -5,6 +5,7 @@
  */
 package jmegame.weapons;
 
+import com.jme3.animation.Skeleton;
 import com.jme3.asset.AssetKey;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
@@ -43,4 +44,9 @@ public class Glock18 implements Gun {
         }
         return model.clone();
     }
+
+//    @Override
+//    public void setSkeleton(Skeleton skel) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }

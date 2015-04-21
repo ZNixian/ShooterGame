@@ -28,7 +28,6 @@ public class PlayerAnimationController {
 
     private final Node root;
     private final AnimControl playerControl;
-    private final AnimChannel boneControl;
 
     public PlayerAnimationController(AssetManager assetManager) {
         root = new Node();
@@ -45,16 +44,15 @@ public class PlayerAnimationController {
 //                    mat1.setColor("Color", ColorRGBA.Blue);
 //                    blue.setMaterial(mat1);
 //                    root.attachChild(blue);
-        Spatial model = LevelManager.getPlayerModel(assetManager);
+        Spatial model = LevelManager.getPlayerModelForGun(assetManager);
         model.getLocalTranslation().addLocal(0,
                 PLAYER_PHYSICS_OFFSET, 0);
         root.attachChild(model);
         Spatial gun = PP2000.INSTANCE.load(assetManager);
-        root.attachChild(gun);
+//        root.attachChild(gun);
 
         playerControl = model.getControl(AnimControl.class);
-
-        boneControl = playerControl.createChannel();
+//        PP2000.INSTANCE.setSkeleton(playerControl.getSkeleton());
     }
 
     public Node getRoot() {
