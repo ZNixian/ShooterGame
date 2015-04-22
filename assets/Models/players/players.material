@@ -1,218 +1,449 @@
-material players_0_base
-{
-    receive_shadows on
 
+material _missing_material_
+{
+    receive_shadows off
     technique
     {
         pass
         {
-            lighting on
+            ambient 0.1 0.1 0.1 1.0
+            diffuse 0.8 0.0 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.3 0.3 0.3 1.0
+        }
+    }
+}
 
-            ambient 0.110000 0.110000 0.110000 1
-            diffuse 0.843000 0.639000 0.517000 1.000000
-            specular 0.300000 0.300000 0.300000 122.880000
-            emissive 0.000000 0.000000 0.000000
+// players:Eyelashes01:bodyMaterial genrated by blender2ogre 0.6.0
 
+material players:Eyelashes01:bodyMaterial 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass players:Eyelashes01:bodyMaterial
+        {
+            ambient 1.0 1.0 1.0 0.0
+            diffuse 1.0 1.0 1.0 0.0
+            specular 0.0 0.0 0.0 0.0 64.0
+            emissive 0.0 0.0 0.0 0.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
             depth_write on
-
-            //texture_unit litsphereTexture
-            //{
-            //    texture textures/adaptive_skin_tone.png
-            //}
-
-        }
-    }
-}
-
-material players_1_mhair02
-{
-    receive_shadows on
-
-    technique
-    {
-        pass
-        {
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
             lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
 
-            ambient 0.110000 0.110000 0.110000 1
-            diffuse 1.000000 1.000000 1.000000 1.000000
-            specular 0.050980 0.050980 0.050980 122.880000
-            emissive 0.000000 0.000000 0.000000
-
-            depth_write off
-            alpha_rejection greater 128
-
-            texture_unit diffuseTexture
+            texture_unit 
             {
-                texture textures/male02_diffuse_black.png
+                texture eyelashes01.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op alpha_blend
             }
-
-            //texture_unit litsphereTexture
-            //{
-            //    texture textures/lit_hair.png
-            //}
-
         }
     }
 }
+// players:Eyebrow008:eyebrow008 genrated by blender2ogre 0.6.0
 
-material players_2_high_poly
+material players:Eyebrow008:eyebrow008 
 {
-    receive_shadows on
+    receive_shadows on 
 
     technique
     {
-        pass
+        pass players:Eyebrow008:eyebrow008
         {
-            lighting on
+            ambient 1.0 1.0 1.0 0.0
+            diffuse 1.0 1.0 1.0 0.0
+            specular 0.0 0.0 0.0 0.0 64.0
+            emissive 0.0 0.0 0.0 0.0
 
-            ambient 0.110000 0.110000 0.110000 1
-            diffuse 1.000000 1.000000 1.000000 1.000000
-            specular 1.000000 1.000000 1.000000 128.000000
-            emissive 0.000000 0.000000 0.000000
-
-            depth_write off
-            alpha_rejection greater 128
-
-            texture_unit diffuseTexture
-            {
-                texture textures/blue_eye.png
-            }
-
-            //texture_unit litsphereTexture
-            //{
-            //    texture textures/skinmat_eye.png
-            //}
-
-        }
-    }
-}
-
-material players_3_eyebrow001
-{
-    receive_shadows on
-
-    technique
-    {
-        pass
-        {
-            lighting on
-
-            ambient 1.000000 1.000000 1.000000 1
-            diffuse 1.000000 1.000000 1.000000 1.000000
-            specular 0.000000 0.000000 0.000000 64.000000
-            emissive 0.000000 0.000000 0.000000
-
-            depth_write off
-            alpha_rejection greater 128
-
-            texture_unit diffuseTexture
-            {
-                texture textures/eyebrow001.png
-            }
-
-        }
-    }
-}
-
-material players_4_tshirt_short
-{
-    receive_shadows on
-
-    technique
-    {
-        pass
-        {
-            lighting on
-
-            ambient 0.000000 0.000000 0.000000 1
-            diffuse 1.000000 1.000000 1.000000 1.000000
-            specular 0.027451 0.027451 0.027451 102.400000
-            emissive 0.000000 0.000000 0.000000
-
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
             depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
 
-            texture_unit diffuseTexture
+            texture_unit 
             {
-                texture textures/tshirt_texture_blue.png
+                texture eyebrow008.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op alpha_blend
             }
+        }
+    }
+}
+// players:HighPolyEyes:Eye_brown genrated by blender2ogre 0.6.0
 
-            //texture_unit normalMapTexture
-            //{
-            //    texture textures/tshirt_normal.png
-            //}
+material players:HighPolyEyes:Eye_brown 
+{
+    receive_shadows on 
 
-            //texture_unit litsphereTexture
-            //{
-            //    texture textures/lit_matte.png
-            //}
+    technique
+    {
+        pass players:HighPolyEyes:Eye_brown
+        {
+            ambient 1.0 1.0 1.0 0.0
+            diffuse 1.0 1.0 1.0 0.0
+            specular 1.0 1.0 1.0 0.0 127.75
+            emissive 0.0 0.0 0.0 0.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+            texture_unit 
+            {
+                texture brown_eye.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op alpha_blend
+            }
+        }
+    }
+}
+// players:Shirt01:shirt01 genrated by blender2ogre 0.6.0
+
+material players:Shirt01:shirt01 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass players:Shirt01:shirt01
+        {
+            ambient 1.0 1.0 1.0 0.0
+            diffuse 1.0 1.0 1.0 0.0
+            specular 0.031369999051094055 0.031369999051094055 0.031369999051094055 0.0 25.0
+            emissive 0.0 0.0 0.0 0.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+            texture_unit 
+            {
+                texture shirt_texture.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op alpha_blend
+            }
+            texture_unit 
+            {
+                texture shirt_normals.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
+        }
+    }
+}
+// players:jeans01:jeans01Material genrated by blender2ogre 0.6.0
+
+material players:jeans01:jeans01Material 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass players:jeans01:jeans01Material
+        {
+            ambient 1.0 1.0 1.0 0.0
+            diffuse 1.0 1.0 1.0 0.0
+            specular 0.02745000086724758 0.02745000086724758 0.02745000086724758 0.0 25.0
+            emissive 0.0 0.0 0.0 0.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+            texture_unit 
+            {
+                texture jeans_basic_diffuse.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op alpha_blend
+            }
+            texture_unit 
+            {
+                texture jeans01_normals.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
+        }
+    }
+}
+// players:Skin genrated by blender2ogre 0.6.0
+
+material players:Skin 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass players:Skin
+        {
+            ambient 0.7975000143051147 0.6032000184059143 0.4848000109195709 1.0
+            diffuse 0.7975000143051147 0.6032000184059143 0.4848000109195709 1.0
+            specular 0.30000001192092896 0.30000001192092896 0.30000001192092896 1.0 122.75
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
 
         }
     }
 }
+// players:Invisio genrated by blender2ogre 0.6.0
 
-material players_5_jeans01
+material players:Invisio 
 {
-    receive_shadows on
+    receive_shadows off 
 
     technique
     {
-        pass
+        pass players:Invisio
         {
-            lighting on
+            ambient 1.0 1.0 1.0 0.0
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 0.0
+            specular 0.5 0.5 0.5 0.0 12.5
+            emissive 1.0 1.0 1.0 1.0
 
-            ambient 1.000000 1.000000 1.000000 1
-            diffuse 1.000000 1.000000 1.000000 1.000000
-            specular 0.027451 0.027451 0.027451 25.100800
-            emissive 0.000000 0.000000 0.000000
-
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
             depth_write on
-
-            texture_unit diffuseTexture
-            {
-                texture textures/jeans_basic_diffuse.png
-            }
-
-            //texture_unit normalMapTexture
-            //{
-            //    texture textures/jeans01_normals.png
-            //}
-
-            //texture_unit aoMapTexture
-            //{
-            //    texture textures/jeans01_ao.png
-            //}
-
-            //texture_unit litsphereTexture
-            //{
-            //    texture textures/lit_matte.png
-            //}
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
 
         }
     }
 }
+// players:Red genrated by blender2ogre 0.6.0
 
-material players_6_shoes02
+material players:Red 
 {
-    receive_shadows on
+    receive_shadows off 
 
     technique
     {
-        pass
+        pass players:Red
         {
-            lighting on
+            ambient 1.0 0.0 0.0 0.0
+            diffuse 0.800000011920929 0.0 0.0 0.0
+            specular 0.5 0.5 0.5 0.0 12.5
+            emissive 1.0 0.0 0.0 1.0
 
-            ambient 1.000000 1.000000 1.000000 1
-            diffuse 1.000000 1.000000 1.000000 1.000000
-            specular 0.078431 0.078431 0.078431 102.400000
-            emissive 0.000000 0.000000 0.000000
-
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
             depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
 
-            texture_unit diffuseTexture
-            {
-                texture textures/shoes02_white.png
-            }
+        }
+    }
+}
+// players:Green genrated by blender2ogre 0.6.0
+
+material players:Green 
+{
+    receive_shadows off 
+
+    technique
+    {
+        pass players:Green
+        {
+            ambient 0.0 1.0 0.0 0.0
+            diffuse 0.0 0.800000011920929 0.0 0.0
+            specular 0.5 0.5 0.5 0.0 12.5
+            emissive 0.0 1.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// players:Blue genrated by blender2ogre 0.6.0
+
+material players:Blue 
+{
+    receive_shadows off 
+
+    technique
+    {
+        pass players:Blue
+        {
+            ambient 0.0 0.0 1.0 0.0
+            diffuse 0.0 0.0 0.800000011920929 0.0
+            specular 0.5 0.5 0.5 0.0 12.5
+            emissive 0.0 0.0 1.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// players:Yellow genrated by blender2ogre 0.6.0
+
+material players:Yellow 
+{
+    receive_shadows off 
+
+    technique
+    {
+        pass players:Yellow
+        {
+            ambient 1.0 1.0 0.0 0.0
+            diffuse 0.800000011920929 0.800000011920929 0.0 0.0
+            specular 0.5 0.5 0.5 0.0 12.5
+            emissive 1.0 1.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
 
         }
     }

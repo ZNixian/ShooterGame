@@ -5,8 +5,7 @@
  */
 package jmegame.common;
 
-import com.jme3.animation.AnimChannel;
-import com.jme3.animation.AnimControl;
+import com.jme3.animation.SkeletonControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -17,7 +16,6 @@ import jmegame.LevelManager;
 import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.PlayerProfile;
-import jmegame.weapons.Glock18;
 import jmegame.weapons.PP2000;
 
 /**
@@ -27,7 +25,6 @@ import jmegame.weapons.PP2000;
 public class PlayerAnimationController {
 
     private final Node root;
-    private final AnimControl playerControl;
 
     public PlayerAnimationController(AssetManager assetManager) {
         root = new Node();
@@ -44,15 +41,35 @@ public class PlayerAnimationController {
 //                    mat1.setColor("Color", ColorRGBA.Blue);
 //                    blue.setMaterial(mat1);
 //                    root.attachChild(blue);
-        Spatial model = LevelManager.getPlayerModelForGun(assetManager);
+        Spatial model = LevelManager.getPlayerModel(assetManager);
         model.getLocalTranslation().addLocal(0,
                 PLAYER_PHYSICS_OFFSET, 0);
         root.attachChild(model);
         Spatial gun = PP2000.INSTANCE.load(assetManager);
+        model.setCullHint(Spatial.CullHint.Never);
 //        root.attachChild(gun);
 
-        playerControl = model.getControl(AnimControl.class);
-//        PP2000.INSTANCE.setSkeleton(playerControl.getSkeleton());
+//        try {
+//            markTree((Node) model, assetManager);
+//        } catch (RuntimeException ex) {
+//            ex.printStackTrace();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+    }
+
+    private void markTree(Node n, AssetManager assetManager) {
+        for (Spatial sp : n.getChildren()) {
+            sp.setCullHint(Spatial.CullHint.Inherit);
+            if (sp instanceof Node) {
+                markTree((Node) sp, assetManager);
+            }
+            SkeletonControl playerControl = sp.getControl(SkeletonControl.class);
+            if (playerControl != null) {
+//                System.out.println("ok: " + sp);
+                PP2000.INSTANCE.setSkeleton(playerControl.getSkeleton(), assetManager);
+            }
+        }
     }
 
     public Node getRoot() {

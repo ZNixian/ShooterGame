@@ -31,7 +31,6 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.texture.Texture;
@@ -50,7 +49,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import static jmegame.JMEGame.make2d;
-import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
 import jmegame.common.PlayerAnimationController;
 import jmegame.networking.MessageClientShoot;
 import jmegame.networking.MessagePlayerDisconnect;
@@ -59,7 +57,6 @@ import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
-import jmegame.networking.SidedPlayerData;
 import jmegame.networking.client.PacketListener;
 
 /**

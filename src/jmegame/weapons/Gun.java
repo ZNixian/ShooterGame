@@ -5,6 +5,7 @@
  */
 package jmegame.weapons;
 
+import com.jme3.animation.Skeleton;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
 
@@ -15,5 +16,5 @@ import com.jme3.scene.Spatial;
 public interface Gun {
 
     public Spatial load(AssetManager manager);
-//    public void setSkeleton(Skeleton skel);
+    public void setSkeleton(Skeleton skel, AssetManager manager);
 }

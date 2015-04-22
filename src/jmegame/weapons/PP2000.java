@@ -12,9 +12,9 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.material.MaterialList;
 import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.plugins.ogre.AnimData;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
 
 /**
@@ -43,6 +43,42 @@ public class PP2000 implements Gun {
             model.setCullHint(Spatial.CullHint.Never);
         }
         return model.clone();
+    }
+
+    @Override
+    public void setSkeleton(Skeleton skel, AssetManager assetManager) {
+        AnimData data = (AnimData) assetManager.loadAsset(
+                "Models/poses/pp2000/player.skeleton.xml");
+
+        Bone chestNew = data.skeleton.getBone("chest");
+        Bone chestOld = skel.getBone("chest");
+
+        fixBone(chestOld, chestNew);
+        chestOld.update();
+        chestOld.updateModelTransforms();
+
+//        Bone chestNew = data.skeleton.getBone("chest");
+//        Bone spine = skel.getBone("spine");
+//        spine.getChildren().clear();
+//        spine.addChild(chestNew);
+//        skel.updateWorldVectors();
+//        spine.update();
+//        spine.updateModelTransforms();
+    }
+
+    private void fixBone(Bone oldB, Bone newB) {
+        oldB.setUserControl(true);
+        oldB.setBindTransforms(newB.getBindPosition(),
+                newB.getBindRotation(), newB.getBindScale());
+        if (newB.getChildren().size() != oldB.getChildren().size()) {
+            ((Node) null).queueDistance++;
+        }
+        for (int i = 0; i < oldB.getChildren().size(); i++) {
+            Bone boneOld = oldB.getChildren().get(i);
+            Bone boneNew = newB.getChildren().get(i);
+            fixBone(boneOld, boneNew);
+            System.out.println("Fixed bone.");
+        }
     }
 
 //    @Override
