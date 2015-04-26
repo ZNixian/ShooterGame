@@ -49,13 +49,13 @@ public class PlayerAnimationController {
         model.setCullHint(Spatial.CullHint.Never);
 //        root.attachChild(gun);
 
-//        try {
-//            markTree((Node) model, assetManager);
-//        } catch (RuntimeException ex) {
-//            ex.printStackTrace();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
+        try {
+            markTree((Node) model, assetManager);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void markTree(Node n, AssetManager assetManager) {

@@ -6,6 +6,7 @@
 package jmegame;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.asset.BlenderKey;
 import com.jme3.asset.ModelKey;
 import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -63,10 +64,8 @@ public class LevelManager {
 //        Spatial model = assetManager.loadAsset(key);
 //        model.setLocalScale(0.35859431f); // see assets/Models/players/README_SCALE
         
-        MaterialList matList = (MaterialList) assetManager.
-                loadAsset("Models/players/players.material");
-        ModelKey key = new OgreMeshKey("Models/players/players.scene", matList);
-        Spatial model = assetManager.loadAsset(key);
+        BlenderKey key = new BlenderKey("Models/players/player.blend");
+        Spatial model = (Spatial) assetManager.loadAsset(key);
         model.setLocalScale(3.5863718f); // see assets/Models/players/README_SCALE
         
 //        MaterialList matList = (MaterialList) assetManager.
