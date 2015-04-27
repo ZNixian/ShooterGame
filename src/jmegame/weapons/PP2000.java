@@ -5,16 +5,13 @@
  */
 package jmegame.weapons;
 
-import com.jme3.animation.Bone;
 import com.jme3.animation.Skeleton;
 import com.jme3.asset.AssetKey;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.material.MaterialList;
-import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.plugins.ogre.AnimData;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
 
 /**
@@ -31,15 +28,13 @@ public class PP2000 implements Gun {
         if (model == null) {
             model = new Node();
             MaterialList matList = (MaterialList) assetManager.loadAsset(
-                    new AssetKey("Models/guns/pp2000/pp2000.mtl"));
+                    new AssetKey("Models/players old/players.material"));
 
-            ModelKey key1 = new OgreMeshKey("Models/guns/pp2000/pp2000.mesh.xml", matList);
-            Spatial submodel1 = assetManager.loadAsset(key1);
+            ModelKey key1 = new OgreMeshKey("Models/players old/players.mesh.xml", matList);
+            Spatial player = assetManager.loadAsset(key1);
+            player.setLocalScale(0.35859431f);
 
-            model.setLocalScale(0.25f);
-            model.attachChild(submodel1);
-            model.setLocalTranslation(-2, -2, 3);
-            model.setLocalRotation(new Quaternion(0, 1, 0, 1));
+            model.attachChild(player);
             model.setCullHint(Spatial.CullHint.Never);
         }
         return model.clone();
@@ -47,80 +42,5 @@ public class PP2000 implements Gun {
 
     @Override
     public void setSkeleton(Skeleton skel, AssetManager assetManager) {
-        AnimData data = (AnimData) assetManager.loadAsset(
-                "Models/poses/pp2000/player.skeleton.xml");
-
-        Bone chestNew = data.skeleton.getBone("chest");
-        Bone chestOld = skel.getBone("chest");
-
-        fixBone(chestOld, chestNew);
-        chestOld.update();
-        chestOld.updateModelTransforms();
-
-//        Bone chestNew = data.skeleton.getBone("chest");
-//        Bone spine = skel.getBone("spine");
-//        spine.getChildren().clear();
-//        spine.addChild(chestNew);
-//        skel.updateWorldVectors();
-//        spine.update();
-//        spine.updateModelTransforms();
     }
-
-    private void fixBone(Bone oldB, Bone newB) {
-        oldB.setUserControl(true);
-        oldB.setBindTransforms(newB.getBindPosition(),
-                newB.getBindRotation(), newB.getBindScale());
-        if (newB.getChildren().size() != oldB.getChildren().size()) {
-            ((Node) null).queueDistance++;
-        }
-        for (int i = 0; i < oldB.getChildren().size(); i++) {
-            Bone boneOld = oldB.getChildren().get(i);
-            Bone boneNew = newB.getChildren().get(i);
-            fixBone(boneOld, boneNew);
-            System.out.println("Fixed bone.");
-        }
-    }
-
-//    @Override
-//    public void setSkeleton(Skeleton skel) {
-//        Bone bone;
-//
-//        bone = skel.getBone("upper_arm.R");
-//        translateBone(bone, 0, -0.25f, 0);
-//        rotateBone(bone, new Quaternion(0.338f, 0.038f, -0.089f, 0.899f));
-//
-//        bone = skel.getBone("forearm.R");
-//        translateBone(bone, 0, 0, 0.125f);
-//        rotateBone(bone, new Quaternion(-0.387f, 0.17f, 0.279f, 0.862f));
-//
-//        bone = skel.getBone("hand.R");
-////        translateBone(bone, 0, 0, 0.125f);
-//        rotateBone(bone, new Quaternion(-0.075f, 0.036f, -0.145f, 0.986f));
-//        
-//        
-//        
-//
-//        bone = skel.getBone("upper_arm.L");
-////        translateBone(bone, 0, -0.25f, 0);
-//        rotateBone(bone, new Quaternion(-0.477f, -0.429f, -0.089f, 0.762f));
-//
-//        bone = skel.getBone("forearm.L");
-////        translateBone(bone, 0, 0, 0.125f);
-//        rotateBone(bone, new Quaternion(0f, 0f, 0f, 1f));
-//
-//        bone = skel.getBone("hand.L");
-////        translateBone(bone, 0, 0, 0.125f);
-//        rotateBone(bone, new Quaternion(-0.049f, -0.475f, 0.153f, 0.865f));
-//    }
-//
-//    private void translateBone(Bone bone, float x, float y, float z) {
-//        bone.setUserControl(true);
-//        bone.setBindTransforms(bone.getBindPosition().add(x, y, z),
-//                bone.getBindRotation(), bone.getBindScale());
-//    }
-//
-//    private void rotateBone(Bone bone, Quaternion rot) {
-//        bone.setUserControl(true);
-//        bone.setBindTransforms(bone.getBindPosition(), rot, bone.getBindScale());
-//    }
 }

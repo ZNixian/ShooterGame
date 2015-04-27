@@ -6,17 +6,12 @@
 package jmegame;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.asset.BlenderKey;
-import com.jme3.asset.ModelKey;
 import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.material.MaterialList;
-import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.plugins.ogre.OgreMeshKey;
 
 /**
  *
@@ -50,45 +45,5 @@ public class LevelManager {
 
     public RigidBodyControl getLandscape() {
         return landscape;
-    }
-
-    public static Spatial getPlayerModel(AssetManager assetManager) {
-//        Spatial model = assetManager.loadModel("players/players.obj");
-//        Material mat_default = new Material(
-//                assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-//        model.setMaterial(mat_default);
-
-//        MaterialList matList = (MaterialList) assetManager.
-//                loadAsset("Models/players/players.material");
-//        ModelKey key = new OgreMeshKey("Models/players/players.mesh.xml", matList);
-//        Spatial model = assetManager.loadAsset(key);
-//        model.setLocalScale(0.35859431f); // see assets/Models/players/README_SCALE
-        
-        BlenderKey key = new BlenderKey("Models/players/player.blend");
-        Spatial model = (Spatial) assetManager.loadAsset(key);
-        model.setLocalScale(3.5863718f); // see assets/Models/players/README_SCALE
-        
-//        MaterialList matList = (MaterialList) assetManager.
-//                loadAsset("Models/players/player.material");
-//        ModelKey key = new OgreMeshKey("Models/players/player.scene", matList);
-//        Spatial model = assetManager.loadAsset(key);
-//        model.setLocalScale(3.5863718f); // see assets/Models/players/README_SCALE
-//        model.setLocalRotation(new Quaternion(-1, 0, 0, 1));
-
-        return model;
-    }
-
-    public static Spatial getPlayerModelForGun(AssetManager assetManager) {
-        Spatial model = assetManager.loadModel("Models/poses/pp2000/pose.obj");
-//        Material mat_default = new Material(
-//                assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-//        model.setMaterial(mat_default);
-
-//        MaterialList matList = (MaterialList) assetManager.
-//                loadAsset("Models/players/players.material");
-//        ModelKey key = new OgreMeshKey("Models/players/players.mesh.xml", matList);
-//        Spatial model = assetManager.loadAsset(key);
-//        model.setLocalScale(0.35859431f); // see assets/Models/players/README_SCALE
-        return model;
     }
 }
