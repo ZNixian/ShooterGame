@@ -1,0 +1,9 @@
+size of player model:
+	height --> 16.732
+
+size of player in-game:
+	height --> 6
+
+scale (relative): 0.35859431
+
+player object is 6 units high, so the player model must be lowered by 6 units.

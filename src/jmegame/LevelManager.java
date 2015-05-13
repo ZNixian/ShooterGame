@@ -23,6 +23,7 @@ public class LevelManager {
     private final RigidBodyControl landscape;
 
     public LevelManager(AssetManager assetManager) {
+        assetManager.registerLoader(TextLoader.class, "offset");
 
         // We load the scene from the zip file and adjust its size.
         assetManager.registerLocator("town.zip", ZipLocator.class);

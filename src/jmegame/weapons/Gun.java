@@ -16,5 +16,6 @@ import com.jme3.scene.Spatial;
 public interface Gun {
 
     public Spatial load(AssetManager manager);
-    public void setSkeleton(Skeleton skel, AssetManager manager);
+
+    public void applyToSkeleton(Skeleton skel, AssetManager assetManager);
 }

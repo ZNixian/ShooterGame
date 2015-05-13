@@ -10,9 +10,14 @@ import com.jme3.asset.AssetKey;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.material.MaterialList;
+import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import libskel.SkelUtils;
 
 /**
  *
@@ -34,6 +39,10 @@ public class PP2000 implements Gun {
             Spatial player = assetManager.loadAsset(key1);
             player.setLocalScale(0.35859431f);
 
+            model.setLocalScale(0.125f);
+            model.attachChild(player);
+            model.setLocalTranslation(-1f, -2.125f, 1.90f);
+            model.setLocalRotation(new Quaternion(0, 1, 0, 1));
             model.attachChild(player);
             model.setCullHint(Spatial.CullHint.Never);
         }
@@ -41,6 +50,10 @@ public class PP2000 implements Gun {
     }
 
     @Override
-    public void setSkeleton(Skeleton skel, AssetManager assetManager) {
+    public void applyToSkeleton(Skeleton skel, AssetManager assetManager) {
+        String str = (String) assetManager.loadAsset("Models/guns/pp2000/Models.players.players.offset");
+        ArrayList<String> strs = new ArrayList<>();
+        strs.addAll(Arrays.asList(str.split("\n")));
+        SkelUtils.loadSkeleton(strs, skel);
     }
 }

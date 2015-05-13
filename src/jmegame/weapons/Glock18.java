@@ -46,7 +46,7 @@ public class Glock18 implements Gun {
     }
 
     @Override
-    public void setSkeleton(Skeleton skel, AssetManager manager) {
+    public void applyToSkeleton(Skeleton skel, AssetManager assetManager) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -7,17 +7,13 @@ package jmegame.server;
 
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Map;
 import java.util.UUID;
-import jmegame.LevelManager;
-import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
 import jmegame.networking.MessageClientShoot;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.ServerPlayerProfile;

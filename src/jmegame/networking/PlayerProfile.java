@@ -16,6 +16,7 @@ import java.util.UUID;
  */
 @Serializable
 public class PlayerProfile {
+    private int weaponID;
     private Vector3f position;
     private Quaternion rotation;
     private long uuid_lsb;
@@ -24,9 +25,10 @@ public class PlayerProfile {
     public PlayerProfile() {
     }
 
-    public PlayerProfile(Vector3f position, Quaternion rotation, UUID uuid) {
+    public PlayerProfile(Vector3f position, Quaternion rotation, int weaponID, UUID uuid) {
         this.position = position;
         this.rotation = rotation;
+        this.weaponID = weaponID;
         this.uuid_lsb = uuid.getLeastSignificantBits();
         this.uuid_msb = uuid.getMostSignificantBits();
     }
@@ -41,5 +43,9 @@ public class PlayerProfile {
 
     public UUID getUuid() {
         return new UUID(uuid_lsb, uuid_msb);
+    }
+
+    public int getWeaponID() {
+        return weaponID;
     }
 }
