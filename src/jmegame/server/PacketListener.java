@@ -17,6 +17,7 @@ import java.util.UUID;
 import jmegame.networking.MessageClientShoot;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.ServerPlayerProfile;
+import jmegame.weapons.PP2000;
 
 /**
  *
@@ -50,7 +51,7 @@ public class PacketListener implements MessageListener<HostedConnection> {
             ServerPlayerProfile prof = profiles.get(source);
             if (prof == null) {
                 prof = new ServerPlayerProfile(UUID.randomUUID(),
-                        server.getAssetManager());
+                        server.getAssetManager(), PP2000.INSTANCE);
 
                 server.getPlayersNode().attachChild(
                         prof.getController().getRoot());

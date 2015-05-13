@@ -30,8 +30,9 @@ public class ServerPlayerProfile {
 
     private final PlayerAnimationController controller;
 
-    public ServerPlayerProfile(UUID uuid, AssetManager assetManager) {
+    public ServerPlayerProfile(UUID uuid, AssetManager assetManager, Gun weapon) {
         this.uuid = uuid;
+        this.weapon = weapon;
         health = 100;
         unsentTCP = true;
 
@@ -87,5 +88,14 @@ public class ServerPlayerProfile {
         rotation = mpu.getRotation();
 
         controller.update(position, rotation);
+    }
+
+    public Gun getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Gun weapon) {
+        unsentTCP = true;
+        this.weapon = weapon;
     }
 }

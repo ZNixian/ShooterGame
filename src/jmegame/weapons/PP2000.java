@@ -16,7 +16,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import libskel.SkelUtils;
 
 /**
@@ -33,11 +32,11 @@ public class PP2000 implements Gun {
         if (model == null) {
             model = new Node();
             MaterialList matList = (MaterialList) assetManager.loadAsset(
-                    new AssetKey("Models/players old/players.material"));
+                    new AssetKey("Models/guns/pp2000/pp2000.material"));
 
-            ModelKey key1 = new OgreMeshKey("Models/players old/players.mesh.xml", matList);
+            ModelKey key1 = new OgreMeshKey("Models/guns/pp2000/pp2000.mesh.xml", matList);
             Spatial player = assetManager.loadAsset(key1);
-            player.setLocalScale(0.35859431f);
+//            player.setLocalScale(0.35859431f);
 
             model.setLocalScale(0.125f);
             model.attachChild(player);

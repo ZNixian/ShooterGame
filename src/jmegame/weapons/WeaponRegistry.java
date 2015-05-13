@@ -39,6 +39,9 @@ public final class WeaponRegistry {
     }
 
     public int getWeaponID(Gun weapon) {
+        if (weapon == null) {
+            throw new IllegalArgumentException("Argument 'weapon' cannot be null!");
+        }
         int id = weapons.indexOf(weapon);
         if (id == -1) {
             throw new IllegalStateException("Weapon " + weapon + " not registered!");
