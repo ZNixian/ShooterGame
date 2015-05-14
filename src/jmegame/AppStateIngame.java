@@ -58,6 +58,7 @@ import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
 import jmegame.networking.client.PacketListener;
+import jmegame.networking.messages.MessageS2CParticle;
 
 /**
  *
@@ -74,6 +75,7 @@ public class AppStateIngame extends AbstractAppState
     private final Node rootNode;
     private final AssetManager assetManager;
     private final Camera cam;
+    private Node particleNode;
 
     private BulletAppState bulletAppState;
     private CharacterControl player;
@@ -172,6 +174,7 @@ public class AppStateIngame extends AbstractAppState
 
         initGui();
         initNetwork();
+        initParticles();
     }
 
     private void setUpLight() {
@@ -262,7 +265,7 @@ public class AppStateIngame extends AbstractAppState
                 game.stop();
                 break;
             case "Shoot":
-                connection.send(new MessageClientShoot());
+                connection.send(new MessageClientShoot(value));
                 break;
         }
     }
@@ -337,6 +340,9 @@ public class AppStateIngame extends AbstractAppState
 
             connection.addMessageListener(packetListener,
                     MessagePlayerDisconnect.class);
+
+            connection.addMessageListener(packetListener,
+                    MessageS2CParticle.class);
 //            if (!connection.isConnected()) {
 //                throw new IllegalStateException("connection is not connected!");
 //            }
@@ -422,4 +428,16 @@ public class AppStateIngame extends AbstractAppState
         return rootNode;
     }
 
+    private void initParticles() {
+        particleNode = new Node("particleNode");
+        rootNode.attachChild(particleNode);
+    }
+
+    public Node getParticleNode() {
+        return particleNode;
+    }
+
+    public PlayerAnimationController getModel() {
+        return model;
+    }
 }

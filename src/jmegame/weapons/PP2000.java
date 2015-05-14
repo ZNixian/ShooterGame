@@ -16,6 +16,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
 import java.util.ArrayList;
 import java.util.Arrays;
+import jmegame.networking.IBulletSource;
 import libskel.SkelUtils;
 
 /**
@@ -54,5 +55,19 @@ public class PP2000 implements Gun {
         ArrayList<String> strs = new ArrayList<>();
         strs.addAll(Arrays.asList(str.split("\n")));
         SkelUtils.loadSkeleton(strs, skel);
+    }
+
+    @Override
+    public void onTriggerStateChange(boolean newState, IBulletSource basicBulletSource) {
+    }
+
+    @Override
+    public void whileTriggerPressed(float tpf, IBulletSource basicBulletSource) {
+        if (basicBulletSource.getCooldown() > 0) {
+            return;
+        }
+        
+        basicBulletSource.addCooldown(0.1f);
+        basicBulletSource.fireBullet(5);
     }
 }

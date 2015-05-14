@@ -16,7 +16,18 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class MessageClientShoot extends AbstractMessage {
 
+    private boolean value;
+
     public MessageClientShoot() {
         super(true);
+    }
+
+    public MessageClientShoot(boolean value) {
+        this();
+        this.value = value;
+    }
+
+    public boolean isPressed() {
+        return value;
     }
 }

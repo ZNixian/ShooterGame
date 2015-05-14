@@ -8,6 +8,7 @@ package jmegame.weapons;
 import com.jme3.animation.Skeleton;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
+import jmegame.networking.IBulletSource;
 
 /**
  *
@@ -18,4 +19,9 @@ public interface Gun {
     public Spatial load(AssetManager manager);
 
     public void applyToSkeleton(Skeleton skel, AssetManager assetManager);
+
+    public void onTriggerStateChange(boolean newState,
+            IBulletSource basicBulletSource);
+
+    public void whileTriggerPressed(float tpf, IBulletSource basicBulletSource);
 }

@@ -10,6 +10,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import java.util.UUID;
 import jmegame.common.PlayerAnimationController;
+import jmegame.common.SUUID;
 import jmegame.weapons.Gun;
 import jmegame.weapons.WeaponRegistry;
 
@@ -28,6 +29,9 @@ public class ServerPlayerProfile {
 
     private boolean unsentTCP;
 
+    private boolean triggerPressed;
+    private float fireCooldown;
+
     private final PlayerAnimationController controller;
 
     public ServerPlayerProfile(UUID uuid, AssetManager assetManager, Gun weapon) {
@@ -41,7 +45,7 @@ public class ServerPlayerProfile {
 
     public PlayerProfile makeSendableVarsion() {
         return new PlayerProfile(position, rotation,
-                WeaponRegistry.getInstance().getWeaponID(weapon), uuid);
+                WeaponRegistry.getInstance().getWeaponID(weapon), new SUUID(uuid));
     }
 
     public Vector3f getPosition() {
@@ -97,5 +101,24 @@ public class ServerPlayerProfile {
     public void setWeapon(Gun weapon) {
         unsentTCP = true;
         this.weapon = weapon;
+    }
+
+    public boolean isTriggerPressed() {
+        return triggerPressed;
+    }
+
+    public void setTriggerPressed(boolean isTriggerPressed) {
+        this.triggerPressed = isTriggerPressed;
+    }
+
+    public float getFireCooldown() {
+        return fireCooldown;
+    }
+
+    public void setFireCooldown(float fireCooldown) {
+        if (fireCooldown < 0) {
+            fireCooldown = 0;
+        }
+        this.fireCooldown = fireCooldown;
     }
 }

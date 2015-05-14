@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jmegame.networking;
+package jmegame.networking.messages;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
-import java.util.UUID;
 import jmegame.common.SUUID;
 
 /**
@@ -15,24 +14,20 @@ import jmegame.common.SUUID;
  * @author campbell
  */
 @Serializable
-public class MessagePlayerDisconnect extends AbstractMessage {
+public class MessageS2CParticle extends AbstractMessage {
 
     private SUUID uuid;
 
-    public MessagePlayerDisconnect() {
+    public MessageS2CParticle() {
         super(true);
     }
 
-    public MessagePlayerDisconnect(PlayerProfile profile) {
+    public MessageS2CParticle(SUUID uuid) {
         this();
-        uuid = profile.getUUID();
+        this.uuid = uuid;
     }
 
-    public MessagePlayerDisconnect(ServerPlayerProfile profile) {
-        this(profile.makeSendableVarsion());
-    }
-    
-    public SUUID getUUID() {
+    public SUUID getUuid() {
         return uuid;
     }
 }

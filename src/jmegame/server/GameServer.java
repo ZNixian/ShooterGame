@@ -17,20 +17,18 @@ import com.jme3.system.JmeContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jmegame.LevelManager;
 import jmegame.networking.MessageClientShoot;
-import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
 import jmegame.networking.ServerPlayerProfile;
+import jmegame.weapons.Gun;
 
 /**
  *
@@ -48,6 +46,7 @@ public class GameServer extends SimpleApplication
     private LevelManager manager;
     private Server networkServer;
     private float updateCounter;
+    private PacketListener plistener;
 
     private Node players;
 
@@ -90,9 +89,10 @@ public class GameServer extends SimpleApplication
             // make and start a server socket
             networkServer = Network.createServer(NetConstants.PORT);
             networkServer.start();
-            PacketListener plistener = new PacketListener(profiles, this);
+            plistener = new PacketListener(profiles, this);
             networkServer.addMessageListener(plistener, MessagePlayerUpdate.class);
-            networkServer.addMessageListener(plistener, MessageClientShoot.class);
+            networkServer.addMessageListener(plistener.shootListener,
+                    MessageClientShoot.class);
             networkServer.addConnectionListener(this);
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,25 +134,34 @@ public class GameServer extends SimpleApplication
                     if (profile.getHealth() == 0) {
                         connection.close("died");
                     }
+
+                    profile.setFireCooldown(profile.getFireCooldown() - tpf);
+
+                    if (profile.isTriggerPressed()) {
+                        Gun weapon = profile.getWeapon();
+                        weapon.whileTriggerPressed(tpf, new BasicBulletSource(plistener, profile));
+                    }
                 }
                 conns++;
             }
 
-            if (profiles.size() != conns) {
-                Set<HostedConnection> old = new HashSet<>(profiles.keySet());
-                old.removeAll(networkServer.getConnections());
-                for (HostedConnection conn : old) {
-                    profiles.remove(conn);
-                }
-            }
+            /*
+             if (profiles.size() != conns) {
+             Set<HostedConnection> old = new HashSet<>(profiles.keySet());
+             old.removeAll(networkServer.getConnections());
+             for (HostedConnection conn : old) {
+             profiles.remove(conn);
+             }
+             }
 
-            if (!disconnected.isEmpty()) {
-                for (ServerPlayerProfile prof : disconnected) {
-                    networkServer.broadcast(new MessagePlayerDisconnect(prof));
-                }
+             if (!disconnected.isEmpty()) {
+             for (ServerPlayerProfile prof : disconnected) {
+             networkServer.broadcast(new MessagePlayerDisconnect(prof));
+             }
 
-                disconnected.clear();
-            }
+             disconnected.clear();
+             }
+             */
         }
     }
 

@@ -7,6 +7,7 @@ package jmegame.networking;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
+import jmegame.networking.ServerPlayerProfile;
 
 /**
  * Stores the health/armor/weapons/ammo for a player. To be sent over TCP, as it

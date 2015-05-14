@@ -10,10 +10,11 @@ import com.jme3.asset.AssetKey;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.material.MaterialList;
-import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
+import jmegame.networking.IBulletSource;
+import jmegame.server.BasicBulletSource;
 
 /**
  *
@@ -48,5 +49,16 @@ public class Glock18 implements Gun {
     @Override
     public void applyToSkeleton(Skeleton skel, AssetManager assetManager) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onTriggerStateChange(boolean newState, IBulletSource basicBulletSource) {
+        if (newState) {
+            basicBulletSource.fireBullet(35);
+        }
+    }
+
+    @Override
+    public void whileTriggerPressed(float tpf, IBulletSource basicBulletSource) {
     }
 }

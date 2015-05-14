@@ -28,6 +28,8 @@ public class PacketListener implements MessageListener<HostedConnection> {
     private final Map<HostedConnection, ServerPlayerProfile> profiles;
     private final GameServer server;
 
+    public final PacketListenerShoot shootListener = new PacketListenerShoot(this);
+
     public PacketListener(Map<HostedConnection, ServerPlayerProfile> profiles,
             GameServer server) {
         this.profiles = profiles;
@@ -62,53 +64,10 @@ public class PacketListener implements MessageListener<HostedConnection> {
             prof.update(mpu);
 
             profiles.put(source, prof);
-        } else if (message instanceof MessageClientShoot) {
-            // do something with the message
-            MessageClientShoot mpu = (MessageClientShoot) message;
-//            System.out.println("Received '" + mpu.getPosition()
-//                    + "' with rotation '" + mpu.getRotation()
-//                    + "' from client #" + source.getId());
-            ServerPlayerProfile prof = profiles.get(source);
-            if (prof == null) {
-                return; // shouldn't happen!
-            }
-
-            // 1. Reset results list.
-            CollisionResults results = new CollisionResults();
-            // 2. Aim the ray from cam loc to cam direction.
-            Ray ray = new Ray(prof.getPosition(), prof.getRotation()
-                    .getRotationColumn(2));
-            // 3. Collect intersections between Ray and Shootables in results list.
-            server.getPlayersNode().collideWith(ray, results);
-
-            if (results.size() > 0) {
-                ServerPlayerProfile hitplayer = null;
-                int i = 0;
-                do {
-                    if (i >= results.size()) {
-                        hitplayer = null;
-                        continue; // could be break; , but meh.
-                    }
-                    // The closest collision point is what was truly hit:
-                    CollisionResult closest = results.getCollision(i);
-                    Spatial hit = closest.getGeometry();
-
-                    hitplayer = findProfileForPlayer(hit);
-                    i++;
-                } while (hitplayer == prof);
-                if (hitplayer == null) {
-//                    System.out.println("No player hit!?");
-                    return;
-                }
-//                System.out.println("prof: " + prof.getUuid()
-//                        + ", hitPlayer: " + hitplayer.getUuid());
-                hitplayer.setHealth(hitplayer.getHealth() - 10);
-//                System.out.println("hit player " + hitplayer);
-            }
         }
     }
 
-    private ServerPlayerProfile findProfileForPlayer(Spatial hit) {
+    public ServerPlayerProfile findProfileForPlayer(Spatial hit) {
         while (hit.getParent() != server.getPlayersNode()) {
             hit = hit.getParent();
         }
@@ -119,5 +78,13 @@ public class PacketListener implements MessageListener<HostedConnection> {
             }
         }
         return null;
+    }
+
+    public Map<HostedConnection, ServerPlayerProfile> getProfiles() {
+        return profiles;
+    }
+
+    public GameServer getServer() {
+        return server;
     }
 }

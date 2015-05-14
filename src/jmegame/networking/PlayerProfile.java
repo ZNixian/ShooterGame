@@ -9,6 +9,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
 import java.util.UUID;
+import jmegame.common.SUUID;
 
 /**
  *
@@ -19,18 +20,16 @@ public class PlayerProfile {
     private int weaponID;
     private Vector3f position;
     private Quaternion rotation;
-    private long uuid_lsb;
-    private long uuid_msb;
+    private SUUID uuid;
 
     public PlayerProfile() {
     }
 
-    public PlayerProfile(Vector3f position, Quaternion rotation, int weaponID, UUID uuid) {
+    public PlayerProfile(Vector3f position, Quaternion rotation, int weaponID, SUUID uuid) {
         this.position = position;
         this.rotation = rotation;
         this.weaponID = weaponID;
-        this.uuid_lsb = uuid.getLeastSignificantBits();
-        this.uuid_msb = uuid.getMostSignificantBits();
+        this.uuid = uuid;
     }
 
     public Vector3f getPosition() {
@@ -41,8 +40,8 @@ public class PlayerProfile {
         return rotation;
     }
 
-    public UUID getUuid() {
-        return new UUID(uuid_lsb, uuid_msb);
+    public SUUID getUUID() {
+        return uuid;
     }
 
     public int getWeaponID() {
