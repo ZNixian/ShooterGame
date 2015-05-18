@@ -11,7 +11,7 @@ import com.jme3.network.MessageListener;
 import jmegame.networking.IBulletSource;
 import jmegame.networking.MessageClientShoot;
 import jmegame.networking.ServerPlayerProfile;
-import jmegame.weapons.Gun;
+import jmegame.weapons.Weapon;
 
 /**
  *
@@ -38,7 +38,7 @@ public class PacketListenerShoot implements MessageListener<HostedConnection> {
                 return; // shouldn't happen!
             }
 
-            Gun weapon = prof.getWeapon();
+            Weapon weapon = prof.getWeapon();
 
             prof.setTriggerPressed(mpu.isPressed());
 

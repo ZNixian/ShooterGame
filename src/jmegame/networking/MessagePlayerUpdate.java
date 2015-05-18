@@ -21,15 +21,17 @@ public class MessagePlayerUpdate extends AbstractMessage {
 
     private Vector3f position;
     private Quaternion rotation;
+    private int weaponID;
 
     public MessagePlayerUpdate() {
         super(false);
     }
 
-    public MessagePlayerUpdate(Vector3f position, Quaternion rotation) {
-        super(false);
+    public MessagePlayerUpdate(Vector3f position, Quaternion rotation, int weaponID) {
+        this();
         this.position = position;
         this.rotation = rotation;
+        this.weaponID = weaponID;
     }
 
     public Vector3f getPosition() {
@@ -38,5 +40,9 @@ public class MessagePlayerUpdate extends AbstractMessage {
 
     public Quaternion getRotation() {
         return rotation;
+    }
+
+    public int getWeaponID() {
+        return weaponID;
     }
 }

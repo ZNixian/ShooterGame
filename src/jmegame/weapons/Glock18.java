@@ -14,13 +14,12 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
 import jmegame.networking.IBulletSource;
-import jmegame.server.BasicBulletSource;
 
 /**
  *
  * @author campbell
  */
-public class Glock18 implements Gun {
+public class Glock18 implements Weapon {
 
     private static Node model;
     public static final Glock18 INSTANCE = new Glock18();
@@ -42,6 +41,7 @@ public class Glock18 implements Gun {
             model.attachChild(submodel1);
             model.attachChild(submodel2);
 //            model.setLocalRotation(new Quaternion(0, 0, 1, 1));
+            model.setCullHint(Spatial.CullHint.Never);
         }
         return model.clone();
     }

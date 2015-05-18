@@ -8,9 +8,12 @@ package jmegame.server;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
+import com.jme3.network.HostedConnection;
 import com.jme3.scene.Spatial;
+import jmegame.common.SUUID;
 import jmegame.networking.IBulletSource;
 import jmegame.networking.ServerPlayerProfile;
+import jmegame.networking.messages.MessageS2CParticle;
 
 /**
  *
@@ -61,7 +64,9 @@ public class BasicBulletSource implements IBulletSource {
 //                System.out.println("hit player " + hitplayer);
         }
 
-//            source.send(new MessageS2CParticle(new SUUID(prof.getUuid())));
+        for (HostedConnection conn : listener.getProfiles().keySet()) {
+            conn.send(new MessageS2CParticle(new SUUID(prof.getUuid())));
+        }
     }
 
     @Override

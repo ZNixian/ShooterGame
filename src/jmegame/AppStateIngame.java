@@ -13,12 +13,15 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.input.CameraInput;
 import com.jme3.input.FlyByCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -59,6 +62,7 @@ import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
 import jmegame.networking.client.PacketListener;
 import jmegame.networking.messages.MessageS2CParticle;
+import jmegame.weapons.WeaponRegistry;
 
 /**
  *
@@ -95,9 +99,9 @@ public class AppStateIngame extends AbstractAppState
     private int health = 100;
     private Element healthBarElement;
 
-    private PlayerAnimationController model;
-
     private final Map<UUID, PlayerAnimationController> players = new HashMap<>();
+
+    private PlayerManagment playerManagment;
 
     public AppStateIngame(JMEGame game) {
         this.game = game;
@@ -161,8 +165,9 @@ public class AppStateIngame extends AbstractAppState
         player.setGravity(30);
         player.setPhysicsLocation(new Vector3f(0, 7.5f, 0));
 
-        model = new PlayerAnimationController(assetManager);
-        rootNode.attachChild(model.getRoot());
+        playerManagment = new PlayerManagment(assetManager, this);
+
+        rootNode.attachChild(playerManagment.getModel().getRoot());
 //        model.getRoot().setCullHint(Spatial.CullHint.Always);
 
         // We attach the scene and the player to the rootnode and the physics space,
@@ -208,6 +213,9 @@ public class AppStateIngame extends AbstractAppState
      * physics-controlled walking and jumping:
      */
     private void setUpKeys() {
+        inputManager.deleteMapping(CameraInput.FLYCAM_ZOOMIN);
+        inputManager.deleteMapping(CameraInput.FLYCAM_ZOOMOUT);
+
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
@@ -217,6 +225,12 @@ public class AppStateIngame extends AbstractAppState
         inputManager.addMapping("Exit", new KeyTrigger(KeyInput.KEY_END));
         inputManager.addMapping("Shoot",
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+
+        inputManager.addMapping("WpAdjNext",
+                new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+        inputManager.addMapping("WpAdjPrev",
+                new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+
         inputManager.addListener(this, "Left");
         inputManager.addListener(this, "Right");
         inputManager.addListener(this, "Up");
@@ -224,7 +238,15 @@ public class AppStateIngame extends AbstractAppState
         inputManager.addListener(this, "Jump");
         inputManager.addListener(this, "Pause");
         inputManager.addListener(this, "Exit");
+
         inputManager.addListener(this, "Shoot");
+
+        inputManager.addListener((AnalogListener) (String name, float value, float tpf) -> {
+            playerManagment.weaponSelect(true, assetManager);
+        }, "WpAdjNext");
+        inputManager.addListener((AnalogListener) (String name, float value, float tpf) -> {
+            playerManagment.weaponSelect(false, assetManager);
+        }, "WpAdjPrev");
     }
 
     /**
@@ -292,8 +314,9 @@ public class AppStateIngame extends AbstractAppState
         }
         player.setWalkDirection(walkDirection);
         Vector3f pos = player.getPhysicsLocation().add(0, 1f, 0);
+//        System.out.println("ok: " + pos.y);
         cam.setLocation(pos);
-        model.update(pos, cam.getRotation());
+        playerManagment.getModel().update(pos, cam.getRotation());
 
         updateCounter += tpf;
 
@@ -301,7 +324,9 @@ public class AppStateIngame extends AbstractAppState
             updateCounter -= NetConstants.UPDATE_TIMER;
 
             MessagePlayerUpdate message = new MessagePlayerUpdate(
-                    cam.getLocation(), cam.getRotation());
+                    cam.getLocation(), cam.getRotation(),
+                    WeaponRegistry.getInstance().getWeaponID(
+                            playerManagment.getModel().getWeapon()));
             // was player.getPhysicsLocation().subtract(0, 4.5f, 0)
             connection.send(message);
 
@@ -438,6 +463,10 @@ public class AppStateIngame extends AbstractAppState
     }
 
     public PlayerAnimationController getModel() {
-        return model;
+        return playerManagment.getModel();
+    }
+
+    public Client getConnection() {
+        return connection;
     }
 }

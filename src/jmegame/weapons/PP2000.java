@@ -23,7 +23,7 @@ import libskel.SkelUtils;
  *
  * @author campbell
  */
-public class PP2000 implements Gun {
+public class PP2000 implements Weapon {
 
     private static Node model;
     public static final PP2000 INSTANCE = new PP2000();

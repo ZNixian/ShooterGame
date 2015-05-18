@@ -28,7 +28,7 @@ import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.NetConstants;
 import jmegame.networking.NetManager;
 import jmegame.networking.ServerPlayerProfile;
-import jmegame.weapons.Gun;
+import jmegame.weapons.Weapon;
 
 /**
  *
@@ -138,7 +138,7 @@ public class GameServer extends SimpleApplication
                     profile.setFireCooldown(profile.getFireCooldown() - tpf);
 
                     if (profile.isTriggerPressed()) {
-                        Gun weapon = profile.getWeapon();
+                        Weapon weapon = profile.getWeapon();
                         weapon.whileTriggerPressed(tpf, new BasicBulletSource(plistener, profile));
                     }
                 }

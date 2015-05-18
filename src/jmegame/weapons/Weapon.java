@@ -14,7 +14,7 @@ import jmegame.networking.IBulletSource;
  *
  * @author campbell
  */
-public interface Gun {
+public interface Weapon {
 
     public Spatial load(AssetManager manager);
 

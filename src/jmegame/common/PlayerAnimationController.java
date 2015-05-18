@@ -19,7 +19,8 @@ import com.jme3.scene.plugins.ogre.OgreMeshKey;
 import static jmegame.PlayerPhysicsData.PLAYER_PHYSICS_OFFSET;
 import jmegame.networking.MessagePlayerUpdate;
 import jmegame.networking.PlayerProfile;
-import jmegame.weapons.PP2000;
+import jmegame.weapons.Weapon;
+import jmegame.weapons.WeaponRegistry;
 
 /**
  *
@@ -29,8 +30,13 @@ public class PlayerAnimationController {
 
     private final Node root;
     private final AnimControl playerControl;
+    private final AssetManager assetManager;
+    private Weapon weapon;
+    private Spatial gun;
 
-    public PlayerAnimationController(AssetManager assetManager) {
+    public PlayerAnimationController(AssetManager assetManager, Weapon weapon) {
+        this.assetManager = assetManager;
+
         root = new Node();
 //                    body = PlayerPhysicsData.
 //                            makeRigidBody(game.getAssetManager());
@@ -56,13 +62,9 @@ public class PlayerAnimationController {
                 PLAYER_PHYSICS_OFFSET, 0);
         root.attachChild(model);
 
-        Spatial gun = PP2000.INSTANCE.load(assetManager);
-        root.attachChild(gun);
-
         playerControl = model.getControl(AnimControl.class);
 
-//        System.out.println("ok: " + playerControl);
-        PP2000.INSTANCE.applyToSkeleton(playerControl.getSkeleton(), assetManager);
+        setWeapon(weapon, assetManager);
     }
 
     public Node getRoot() {
@@ -74,14 +76,47 @@ public class PlayerAnimationController {
     }
 
     public void update(PlayerProfile profile) {
+        Weapon w = WeaponRegistry.getInstance().getWeaponByID(profile.getWeaponID());
+        if (w != null) {
+            setWeapon(w, assetManager);
+        }
         update(profile.getPosition(), profile.getRotation());
     }
 
     public void update(Vector3f pos, Quaternion rot) {
         root.setLocalTranslation(pos);
 
-        Quaternion q = rot.clone();
-        q.set(0, q.getY(), 0, q.getW());
-        root.setLocalRotation(q);
+//        Quaternion q = rot.clone();
+//        q.set(0, q.getY(), 0, q.getW());
+//        root.setLocalRotation(q);
+//        long startTime = System.nanoTime();
+
+        Vector3f v3f = rot.getRotationColumn(2);
+        v3f.y = 0;
+        root.setLocalRotation(new Quaternion(0, 0, 0, 1));
+//        System.out.println("ok: " + root.getWorldRotation());
+        root.getLocalRotation().lookAt(v3f, new Vector3f(0, 1, 0));
+
+//        System.out.println("time taken: " + (System.nanoTime() - startTime));
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon, AssetManager assetManager) {
+        if (this.weapon == weapon) {
+            return;
+        }
+        this.weapon = weapon;
+
+        if (gun != null) {
+            root.detachChild(gun);
+        }
+        gun = weapon.load(assetManager);
+        root.attachChild(gun);
+
+//        System.out.println("ok");
+//        weapon.applyToSkeleton(playerControl.getSkeleton(), assetManager);
     }
 }

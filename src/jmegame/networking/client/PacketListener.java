@@ -23,6 +23,7 @@ import jmegame.networking.MessagePlayerDisconnect;
 import jmegame.networking.MessagePlayerServerUpdatePosition;
 import jmegame.networking.MessageServerUpdateStats;
 import jmegame.networking.messages.MessageS2CParticle;
+import jmegame.weapons.WeaponRegistry;
 
 /**
  *
@@ -49,7 +50,9 @@ public class PacketListener implements MessageListener<Client> {
                 PlayerAnimationController player = players.get(uuid);
                 if (player == null) {
                     player = new PlayerAnimationController(game.
-                            getGame().getAssetManager());
+                            getGame().getAssetManager(), WeaponRegistry.
+                            getInstance().getWeaponByID(update.getProfile().
+                                    getWeaponID()));
 
                     game.getRootNode().attachChild(player.getRoot());
 //                    game.getBulletAppState().getPhysicsSpace().add(body);
@@ -91,7 +94,7 @@ public class PacketListener implements MessageListener<Client> {
                 Map<UUID, PlayerAnimationController> players = game.getPlayers();
                 UUID uuid = ((MessageS2CParticle) message).getUuid().asUUID();
                 PlayerAnimationController player = players.get(uuid);
-                if(player == null) {
+                if (player == null) {
                     player = game.getModel();
                 }
 

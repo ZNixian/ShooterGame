@@ -8,7 +8,6 @@ package jmegame.networking;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
-import java.util.UUID;
 import jmegame.common.SUUID;
 
 /**
@@ -25,7 +24,8 @@ public class PlayerProfile {
     public PlayerProfile() {
     }
 
-    public PlayerProfile(Vector3f position, Quaternion rotation, int weaponID, SUUID uuid) {
+    public PlayerProfile(Vector3f position, Quaternion rotation, int weaponID,
+            SUUID uuid) {
         this.position = position;
         this.rotation = rotation;
         this.weaponID = weaponID;

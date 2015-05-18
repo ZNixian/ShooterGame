@@ -11,7 +11,8 @@ import com.jme3.math.Vector3f;
 import java.util.UUID;
 import jmegame.common.PlayerAnimationController;
 import jmegame.common.SUUID;
-import jmegame.weapons.Gun;
+import jmegame.weapons.PP2000;
+import jmegame.weapons.Weapon;
 import jmegame.weapons.WeaponRegistry;
 
 /**
@@ -23,7 +24,7 @@ public class ServerPlayerProfile {
 
     private Vector3f position;
     private Quaternion rotation;
-    private Gun weapon;
+    private Weapon weapon;
     private final UUID uuid;
     private int health;
 
@@ -34,18 +35,19 @@ public class ServerPlayerProfile {
 
     private final PlayerAnimationController controller;
 
-    public ServerPlayerProfile(UUID uuid, AssetManager assetManager, Gun weapon) {
+    public ServerPlayerProfile(UUID uuid, AssetManager assetManager, Weapon weapon) {
         this.uuid = uuid;
         this.weapon = weapon;
         health = 100;
         unsentTCP = true;
 
-        controller = new PlayerAnimationController(assetManager);
+        controller = new PlayerAnimationController(assetManager, PP2000.INSTANCE);
     }
 
     public PlayerProfile makeSendableVarsion() {
         return new PlayerProfile(position, rotation,
-                WeaponRegistry.getInstance().getWeaponID(weapon), new SUUID(uuid));
+                WeaponRegistry.getInstance().getWeaponID(weapon),
+                new SUUID(uuid));
     }
 
     public Vector3f getPosition() {
@@ -94,12 +96,12 @@ public class ServerPlayerProfile {
         controller.update(position, rotation);
     }
 
-    public Gun getWeapon() {
+    public Weapon getWeapon() {
         return weapon;
     }
 
-    public void setWeapon(Gun weapon) {
-        unsentTCP = true;
+    public void setWeapon(Weapon weapon) {
+//        unsentTCP = true;
         this.weapon = weapon;
     }
 

@@ -28,17 +28,17 @@ public final class WeaponRegistry {
     }
 
     /////////
-    private final ArrayList<Gun> weapons = new ArrayList<>();
+    private final ArrayList<Weapon> weapons = new ArrayList<>();
 
-    public void registerWeapon(Gun weapon) {
+    public void registerWeapon(Weapon weapon) {
         weapons.add(weapon);
     }
 
-    public Gun getWeaponByID(int id) {
+    public Weapon getWeaponByID(int id) {
         return weapons.get(id);
     }
 
-    public int getWeaponID(Gun weapon) {
+    public int getWeaponID(Weapon weapon) {
         if (weapon == null) {
             throw new IllegalArgumentException("Argument 'weapon' cannot be null!");
         }
