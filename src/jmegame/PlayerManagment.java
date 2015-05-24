@@ -55,6 +55,6 @@ public class PlayerManagment {
         } while (guns[selectedGun] == null);
 
         model.setWeapon(guns[selectedGun], assetManager);
-//        stateIngame.getConnection().send(new MessageC2SGunSwitch(selectedGun));
+        stateIngame.getConnection().send(new MessageC2SGunSwitch(selectedGun));
     }
 }
